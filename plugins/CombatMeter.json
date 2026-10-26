@@ -1,0 +1,23 @@
+{
+  "Id": "CombatMeter",
+  "Name": "Combat Meter",
+  "Author": "Ashla contributors",
+  "Description": "Damage, healing, damage taken and threat per encounter for you and your companion, from parsed combat-log events.",
+  "Version": "0.1.0",
+  "ApiLevel": 1,
+  "Tags": [
+    "combat",
+    "parser",
+    "meter"
+  ],
+  "License": "AGPL-3.0-only",
+  "Source": "https://github.com/YozoraCho/Holocron",
+  "Download": "https://github.com/YozoraCho/Holocron/releases/download/CombatMeter-v0.1.0/CombatMeter-0.1.0.zip",
+  "Sha256": "924044c5184b179b8e4166b718f1b9c6824ab7c96eec117d8d239d123c331234",
+  "Files": {
+    "CombatMeter.deps.json": "09d193294c2ee661ed875c61b32d162c2693ebc649692c3a5cd899af990a55e3",
+    "CombatMeter.dll": "57fa364356559832bc96d0785a8f482bbd17c75b4e09b8e2cc639d67cbccd198",
+    "CombatMeter.runtimeconfig.json": "2e1693f8326910b07be4292d78dceba9cb49952c500afab1860d09b4d5e54047"
+  },
+  "Changes": "First release. Damage, healing, damage taken and threat per fight, with ability breakdowns and saved fights."
+}

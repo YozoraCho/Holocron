@@ -3,8 +3,8 @@
 Tactical Readout (`src/TacticalReadout`) shows boss timers and alerts over SWTOR. It works two ways:
 
 - **BARAS boss timers, built in.** Tactical Readout reads the boss encounter files of
-  [BARAS](https://github.com/baras-app/baras) directly: timers, phases, counters and alerts for 54 operations and
-  flashpoints, ready the moment you zone in. See [BARAS boss timers](#baras-boss-timers).
+  [BARAS](https://github.com/baras-app/baras) directly: timers, phases, counters and alerts for 19 operations,
+  34 flashpoints and a lair boss, ready the moment you zone in. See [BARAS boss timers](#baras-boss-timers).
 - **Fight files of your own**, in the spirit of [Cactbot](https://github.com/OverlayPlugin/cactbot)'s raidboss
   module for FFXIV: a timeline that stays in step with the boss, and triggers. See [Making a fight](#making-a-fight).
 

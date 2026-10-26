@@ -128,6 +128,7 @@ public class BarasLoaderTests
         var areas = files.Select(f => BarasLoader.Parse(f, System.IO.File.ReadAllText(f))).ToList();
 
         Assert.Equal(54, files.Count);
+        Assert.Equal("19 operations, 34 flashpoints and 1 other area", BarasArea.Describe(areas));
         Assert.All(areas, a => Assert.False(string.IsNullOrWhiteSpace(a.Name)));
         Assert.True(areas.Sum(a => a.Bosses.Count) >= 200);
         Assert.True(areas.Sum(a => a.TimerCount) >= 900);

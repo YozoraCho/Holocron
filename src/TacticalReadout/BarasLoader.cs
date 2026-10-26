@@ -94,7 +94,7 @@ internal static class BarasLoader
                 throw new BarasFormatException($"Boss \"{id}\": {error.Message}");
             }
         }
-        return new BarasArea(path, name, areaId, bosses);
+        return new BarasArea(path, name, areaId, bosses, (Str(area, "area_type") ?? "operation").Trim().ToLowerInvariant());
     }
 
     internal static TomlTable ReadToml(string path, string text)

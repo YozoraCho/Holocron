@@ -232,7 +232,7 @@ internal sealed class SettingsPanel(ReadoutService service, AlertPanel alerts, I
         bool useBaras = service.Settings.UseBaras;
         if (ImGui.Checkbox("Use BARAS boss timers", ref useBaras)) service.SetUseBaras(useBaras);
         ImGui.PushTextWrapPos(0f);
-        AshlaDraw.MutedText($"Timers, phases and alerts for {baras.Count} operations and flashpoints from BARAS (MIT license). " +
+        AshlaDraw.MutedText($"Timers, phases and alerts for {BarasArea.Describe(baras.Select(b => b.Area))} from BARAS (MIT license). " +
                             "When one of your fight files has the boss, its timeline is shown instead.");
         ImGui.PopTextWrapPos();
         if (baras.Count > 0 && ImGui.TreeNode("Areas"))

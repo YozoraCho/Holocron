@@ -239,9 +239,29 @@ internal sealed record BarasBoss(
         Phases.FirstOrDefault(p => p.Enabled && BarasDifficulty.Allows(p.Difficulties, difficulty) && p.Start.ContainsCombatStart);
 }
 
-internal sealed record BarasArea(string Path, string Name, ulong AreaId, IReadOnlyList<BarasBoss> Bosses)
+internal sealed record BarasArea(string Path, string Name, ulong AreaId, IReadOnlyList<BarasBoss> Bosses, string Type = "")
 {
     public int TimerCount => Bosses.Sum(b => b.Timers.Count);
+
+    public static string Describe(IEnumerable<BarasArea> areas)
+    {
+        var list = areas.ToList();
+        int operations = list.Count(a => a.Type == "operation");
+        int flashpoints = list.Count(a => a.Type == "flashpoint");
+        int other = list.Count - operations - flashpoints;
+        var parts = new List<string>();
+        if (operations > 0) parts.Add(Count(operations, "operation", "operations"));
+        if (flashpoints > 0) parts.Add(Count(flashpoints, "flashpoint", "flashpoints"));
+        if (other > 0) parts.Add(Count(other, "other area", "other areas"));
+        return parts.Count switch
+        {
+            0 => "no areas",
+            1 => parts[0],
+            _ => string.Join(", ", parts.Take(parts.Count - 1)) + " and " + parts[^1]
+        };
+    }
+
+    private static string Count(int n, string one, string many) => $"{n} {(n == 1 ? one : many)}";
 }
 
 internal sealed record BarasDifficulty(string Tier, int GroupSize)

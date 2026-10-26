@@ -14,7 +14,7 @@ The official plugins are developed here, in `src/`:
 | Plugin | What it does |
 |---|---|
 | [Combat Meter](src/CombatMeter) | An ACT-style parser: damage, healing, damage taken and threat per encounter, with ability breakdowns and saved fights. |
-| [Tactical Readout](src/TacticalReadout) | Boss timelines and alerts in the spirit of Cactbot, with optional text-to-speech. Guide: [docs/tactical-readout.md](docs/tactical-readout.md). |
+| [Tactical Readout](src/TacticalReadout) | Boss timers, phases and alerts for 54 operations and flashpoints from [BARAS](https://github.com/baras-app/baras)'s boss data, plus Cactbot-style fight files of your own, with optional text-to-speech. Guide: [docs/tactical-readout.md](docs/tactical-readout.md). |
 
 They build against the `Ashla.SDK` and `Ashla.UI` NuGet packages (versions in `Directory.Packages.props`), with
 the .NET 10 SDK:
@@ -26,6 +26,9 @@ dotnet test Holocron.slnx
 
 To try them in a developer build of Ashla, add
 `-p:AshlaPluginsDir=<Ashla>/src/Ashla.Host/bin/Debug/net10.0/plugins` and every build is copied there.
+
+Tactical Readout ships BARAS's boss encounter files (MIT) in `src/TacticalReadout/Fights/BARAS`;
+`python tools/update_baras.py` refreshes them from BARAS.
 
 To release one, raise its `<Version>` in its `.csproj`, merge, and push a tag made of its folder name and version,
 such as `CombatMeter-v0.1.0`. The Plugin release workflow checks the tag, runs the tests, builds the zip with

@@ -1,0 +1,121 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Korriban Incursion - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# Full Republic variant, then full Imperial variant. 3 bosses, 1 bonus boss (master only) each.
+
+[area]
+name = "Korriban Incursion"
+area_id = 833571547775710
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Republic Boss 1: Lord Renning
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "lord_renning"
+name = "Lord Renning"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Lord Renning"
+ids = [3333474442280960, 3468899056091136]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Republic Boss 2: I5-T1 Fortification Droid
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "i5_t1"
+name = "I5-T1 Fortification Droid"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "I5-T1"
+ids = [3468894761123840, 3334535299203072]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Republic Boss 3: Darth Soverus
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "darth_soverus"
+name = "Darth Soverus"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Darth Soverus"
+ids = [3468911940993024, 3331378498240512]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Republic Bonus Boss: Imperial Commander
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "korriban_imperial_commander"
+name = "Imperial Commander"
+difficulties = ["master"]
+
+[[boss.entities]]
+name = "Imperial Commander"
+ids = [3484816204890112, 3493187096150016]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Imperial Boss 1: Master Riilna
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "master_riilna"
+name = "Master Riilna"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Master Riilna"
+ids = [3468753027203072, 3333461557379072]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Imperial Boss 2: R-9XR Siege Droid
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "r_9xr"
+name = "R-9XR Siege Droid"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "R-9XR"
+ids = [3468748732235776, 3329905324457984]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Imperial Boss 3: Commander Jensyn
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "commander_jensyn"
+name = "Commander Jensyn"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Commander Jensyn"
+ids = [3468757322170368, 3331339843534848]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Imperial Bonus Boss: Republic Commander
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "korriban_republic_commander"
+name = "Republic Commander"
+difficulties = ["master"]
+
+[[boss.entities]]
+name = "Republic Commander"
+ids = [3484803319988224, 3493182801182720]
+is_boss = true

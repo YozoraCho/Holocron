@@ -1,0 +1,2019 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Dxun - The Nature of Progress
+# ═══════════════════════════════════════════════════════════════════════════════
+# 4 main bosses: Red, trandos, Huntmaster, Apex Vanguard
+
+[area]
+name = "Dxun"
+id = 833571547775792
+
+# "Arrow" timer starts past the banner in the entrance corridor (MM only).
+# The start line is diagonal: inside the corridor box, crossed means x - y > -485.
+# The pre-run waiting spot sits at roughly x=-343, y=146..154 (x - y down to -486), so
+# the line must stay past that to avoid firing while the group is still gathering.
+[area.timer_start]
+difficulties = ["master"]
+position = [
+  { entity = "source", axis = "x", op = "between", min = -365.0, max = -325.0 },
+  { entity = "source", axis = "y", op = "between", min = 120.0, max = 165.0 },
+  { entity = "source", axis = "z", op = "between", min = -3.0, max = 3.0 },
+  { entity = "source", axis = "x_minus_y", op = "gt", value = -485.0 },
+]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Red
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "red"
+name = "Red"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Red"
+ids = [4330233272467456, 4246176467517440, 4382185196879872]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities]]
+name = "Bull"
+ids = [4246356856143872]
+is_boss = false
+
+[[boss.counters]]
+id = "red_bulls_killed"
+name = "Bulls Killed"
+increment_on = { type = "entity_death", selector = ["Bull"] }
+
+[[boss.phases]]
+id = "red_red"
+name = "Red"
+start_trigger = { type = "any_of", conditions = [
+  { type = "combat_start" },
+  { type = "phase_ended", phase_id = "red_bull" },
+] }
+
+[[boss.phases]]
+id = "red_bull"
+name = "Bull"
+start_trigger = { type = "npc_appears", selector = ["Bull"] }
+end_trigger = { type = "entity_death", selector = ["Bull"] }
+
+[[boss.timer]]
+id = "red_bull_cs"
+name = "Bull Start"
+display_text = "Bull"
+trigger = { type = "combat_start" }
+color = [219, 93, 28, 255]
+duration_secs = 60.0
+icon_ability_id = 4250067707887616
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "red_bull_gives_u_wings"
+name = "Bull"
+trigger = { type = "timer_expires", timer_id = "red_bull_cs" }
+color = [219, 93, 28, 255]
+duration_secs = 60.0
+icon_ability_id = 4250067707887616
+difficulties = ["veteran", "master"]
+chains_to = "red_enrage_bull"
+repeats = 5
+
+[[boss.timer]]
+id = "red_enrage_bull"
+name = "Enrage + Bull"
+duration_secs = 480.0
+color = [219, 28, 180, 255]
+icon_ability_id = 4250067707887616
+difficulties = ["veteran", "master"]
+show_at_secs = 60.0
+
+[boss.timer.trigger]
+type = "combat_start"
+
+[[boss.timer]]
+id = "red_phospholipase_corona"
+name = "Phospholipase Corona"
+trigger = { type = "effect_removed", effects = [
+  4250076297822510,
+], target = "local_player" }
+is_alert = true
+alert_text = "Flower buff expired"
+color = [25, 158, 229, 255]
+icon_ability_id = 4250076297822510
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "red_hydrochloric_pool_cs"
+name = "Hydrochloric Pool Start"
+display_text = "Hydrochloric Pool"
+trigger = { type = "combat_start" }
+duration_secs = 15.0
+color = [23, 123, 8, 255]
+icon_ability_id = 4250097772658688
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "red_hydrochloric_pool"
+name = "Hydrochloric Pool"
+trigger = { type = "ability_cast", abilities = [4250097772658688] }
+duration_secs = 47.0
+color = [23, 123, 8, 255]
+icon_ability_id = 4250097772658688
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "red_acidic_jet_1st"
+name = "Acidic Jet Start"
+display_text = "Acidic Jet"
+trigger = { type = "combat_start" }
+duration_secs = 20.0
+color = [224, 25, 24, 255]
+icon_ability_id = 4250089182724096
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "red_acidic_jet"
+name = "Acidic Jet"
+trigger = { type = "ability_cast", abilities = [4250089182724096] }
+duration_secs = 30.0
+color = [224, 25, 24, 255]
+icon_ability_id = 4250089182724096
+difficulties = ["veteran", "master"]
+can_be_refreshed = true
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Holding Pens
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "holding_pens"
+name = "Lights Out"
+has_victory_trigger = true
+victory_trigger = { type = "any_of", conditions = [
+  { type = "damage_taken", abilities = [
+    4258554563264512,
+  ], source = "any", target = "any" },
+  { type = "target_set", target = { selector = [
+    4340614208421888,
+  ] } },
+] }
+
+[boss.encounter_trigger]
+type = "threat_modified"
+abilities = [3984986621345792]
+threat_value = 10000.0
+
+[[boss.entities]]
+name = "Czerka Pursuit Droid"
+ids = [4389417921806336]
+is_boss = true
+triggers_encounter = true
+
+[[boss.entities]]
+name = "Czerka Warden Droid"
+ids = [4245686841245696]
+is_boss = true
+triggers_encounter = true
+
+[[boss.phases]]
+id = "holding_pens_pursuit_droid"
+name = "Pursuit Droid"
+
+[boss.phases.start_trigger]
+type = "effect_applied"
+effects = [4389447986577664]
+target = "any_player"
+
+[boss.phases.start_trigger.source]
+selector = ["Czerka Pursuit Droid"]
+
+[boss.phases.end_trigger]
+type = "ability_cast"
+abilities = [4389426511740928]
+source = "boss"
+target = "any"
+
+[[boss.phases]]
+id = "holding_pens_encounter"
+name = "Encounter"
+
+[boss.phases.start_trigger]
+type = "any_of"
+
+[[boss.phases.start_trigger.conditions]]
+type = "combat_start"
+
+[[boss.phases.start_trigger.conditions]]
+type = "phase_ended"
+phase_id = "holding_pens_pursuit_droid"
+
+[[boss.challenge]]
+id = "holding_pens_pursuit_dps"
+name = "Pursuit Droid DPS"
+metric = "damage"               # See metrics below
+enabled = true
+color = [255, 100, 100, 255]
+columns = "total_per_second"    # See column modes below
+
+[[boss.challenge.conditions]]
+type = "phase"
+phase_ids = ["holding_pens_pursuit_droid"]
+
+[[boss.challenge.conditions]]
+type = "target"
+match = { selector = ["Czerka Pursuit Droid"] }
+
+[[boss.counter]]
+id = "holding_pens_stun_darts"
+name = "Stun Darts"
+increment_on = { type = "effect_applied", effects = [4389447986577664] }
+initial_value = 0
+
+[[boss.timer]]
+id = "hold_pens_droid_1st"
+name = "Droid First"
+display_text = "Droid Returns"
+duration_secs = 13
+trigger = { type = "effect_applied", effects = [
+  4389426511740928,
+], source = { selector = [
+  "Czerka Pursuit Droid",
+] } }
+conditions = [
+  { type = "counter_compare", counter_id = "holding_pens_stun_darts", operator = "eq", value = 0 },
+]
+icon_ability_id = 4389430806708224
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "hold_pens_droid"
+name = "Droid Returns"
+duration_secs = 43.0
+trigger = { type = "effect_applied", effects = [
+  4389426511740928,
+], source = { selector = [
+  "Czerka Pursuit Droid",
+] } }
+conditions = [
+  { type = "counter_compare", counter_id = "holding_pens_stun_darts", operator = "gte", value = 1 },
+]
+icon_ability_id = 4389430806708224
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "holding_pens_flare"
+name = "Flare Duration"
+duration_secs = 20.0
+trigger = { type = "ability_cast", abilities = [4250840802000896] }
+color = [130, 130, 130, 255]
+icon_ability_id = 4250840802000896
+difficulties = ["story", "veteran", "master"]
+can_be_refreshed = true
+
+[[boss.timer]]
+id = "holding_pens_pursuit_target"
+name = "Pursuit Target"
+is_alert = true
+alert_text = "Droid is targeting you"
+color = [255, 0, 51, 255]
+icon_ability_id = 4389430806708224
+difficulties = ["master"]
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4389430806708224]
+source = "any"
+target = "local_player"
+
+[boss.timer.audio]
+enabled = false
+offset = 0
+countdown_start = 0
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Lake add rush
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "breach"
+name = "According To Plan"
+encounter_trigger_fallback_secs = 5.0
+
+[boss.encounter_trigger]
+type = "threat_modified"
+abilities = [3984986621345792]
+
+[[boss.entities]]
+name = "Delicious Rampaging Charger"
+ids = [4397956316790784]
+is_boss = false
+is_kill_target = false
+triggers_encounter = true
+
+[[boss.entities]]
+name = "Warden Enforcer"
+ids = [4338552624119808]
+is_boss = true
+
+[[boss.timer]]
+id = "breach_flare"
+name = "Flare Duration"
+duration_secs = 20.0
+trigger = { type = "ability_cast", abilities = [4250840802000896] }
+color = [130, 130, 130, 255]
+icon_ability_id = 4250840802000896
+difficulties = ["story", "veteran", "master"]
+can_be_refreshed = true
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: trandos (Pack Leader)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "trandos"
+name = "Trandoshans"
+difficulties = ["story", "veteran", "master"]
+# NiM: Ultimate Hunter casts Dying Light (effect removed) or player targets loot cache
+has_victory_trigger = true
+victory_trigger = { type = "any_of", conditions = [
+  { type = "effect_removed", effects = [
+    4381085685252434,
+  ], source = { selector = [
+    "Ultimate Hunter",
+  ] } },
+  { type = "target_set", target = { selector = [
+    4330074358677504,
+  ] } },
+  { type = "npc_appears", selector = [
+    4408929958232064,
+    4333471677808640,
+  ] },
+  { type = "boss_hp_below", hp_percent = 1.0, selector = [
+    "Ultimate Hunter",
+  ] },
+] }
+victory_trigger_difficulties = ["master"]
+
+[[boss.entities]]
+name = "Titax"
+ids = [4245970309087232]
+is_boss = true
+
+[[boss.entities.hp_markers]]
+hp_percent = 15.0
+label = "Pushes"
+
+[[boss.entities]]
+name = "Greus"
+ids = [4245978899021824]
+is_boss = true
+
+[[boss.entities.hp_markers]]
+hp_percent = 15.0
+label = "Pushes"
+
+[[boss.entities]]
+name = "Kronissus"
+ids = [4245983193989120]
+is_boss = true
+
+[[boss.entities.hp_markers]]
+hp_percent = 15.0
+label = "Pushes"
+
+[[boss.entities]]
+name = "Hissyphus"
+ids = [4245987488956416]
+is_boss = true
+
+[[boss.entities.hp_markers]]
+hp_percent = 15.0
+label = "Pushes"
+
+[[boss.entities]]
+name = "Ultimate Hunter"
+ids = [4381150109761536]
+is_boss = true
+
+[[boss.phases]]
+id = "trandos_first_four"
+name = "4 Trandos"
+start_trigger = { type = "combat_start" }
+
+[[boss.phases]]
+id = "trandos_ultimate"
+name = "Ultimate Hunter"
+start_trigger = { type = "npc_appears", selector = ["Ultimate Hunter"] }
+
+[[boss.timer]]
+id = "trandos_crush_the_weak_cs"
+name = "Crush the Weak Start"
+display_text = "Crush The Weak"
+trigger = { type = "combat_start" }
+duration_secs = 30.0
+color = [200, 0, 100, 255]
+icon_ability_id = 4256239575891968
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "trandos_inspiration_cs"
+name = "Inspiration Start"
+display_text = "Inspiration"
+trigger = { type = "combat_start" }
+duration_secs = 20.0
+color = [0, 175, 255, 255]
+icon_ability_id = 4377748495663104
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "trandos_inspiration"
+name = "Inspiration"
+trigger = { type = "ability_cast", abilities = [4377748495663104] }
+duration_secs = 25.0
+color = [0, 175, 255, 255]
+icon_ability_id = 4377748495663104
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "trandos_crush_the_weak"
+name = "Crush the Weak"
+trigger = { type = "ability_cast", abilities = [4256239575891968] }
+duration_secs = 40.0
+color = [200, 0, 100, 255]
+icon_ability_id = 4256239575891968
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "trandos_crush_the_weak_1st_vm"
+name = "Crush the Weak 1st VM"
+trigger = { type = "npc_appears", selector = ["Titax"] }
+duration_secs = 30.0
+color = [200, 0, 100, 255]
+icon_ability_id = 4256239575891968
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "trandos_titax_strike"
+name = "Titax Strike"
+trigger = { type = "ability_cast", abilities = [4256733497131008] }
+duration_secs = 20.0
+color = [150, 0, 0, 255]
+icon_ability_id = 4256733497131008
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "trandos_titax_strike_1st"
+name = "Titax Strike NiM Start"
+trigger = { type = "combat_start" }
+duration_secs = 8.0
+color = [150, 0, 0, 255]
+icon_ability_id = 4256733497131008
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "trandos_titax_strike_1st_vm"
+name = "Titax Strike 1st VM"
+trigger = { type = "npc_appears", selector = ["Titax"] }
+duration_secs = 8.0
+color = [150, 0, 0, 255]
+icon_ability_id = 4256733497131008
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "trandos_titax_strike_vm"
+name = "Titax Strike VM"
+trigger = { type = "ability_cast", abilities = [4256733497131008] }
+duration_secs = 35.0
+color = [150, 0, 0, 255]
+icon_ability_id = 4256733497131008
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "trandos_divebomb_1st"
+name = "Divebomb 1st"
+trigger = { type = "npc_appears", selector = ["Greus"] }
+duration_secs = 40.0
+color = [224, 107, 24, 255]
+icon_ability_id = 4377413488214016
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "trandos_divebomb"
+name = "Divebomb"
+trigger = { type = "ability_cast", abilities = [4377413488214016] }
+duration_secs = 40.0
+color = [224, 107, 24, 255]
+icon_ability_id = 4377413488214016
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "trandos_ayhis_eru"
+name = "Ayhis & Eru"
+trigger = { type = "ability_cast", abilities = [4255208783740928] }
+duration_secs = 7.0
+color = [255, 200, 0, 255]
+icon_ability_id = 4255208783741194
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "trandos_fire_blast_1st"
+name = "Fire Blast 1st"
+trigger = { type = "npc_appears", selector = ["Greus"] }
+duration_secs = 20.0
+color = [219, 34, 32, 255]
+icon_ability_id = 4250359765663744
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "trandos_fire_blast_1st_vm"
+name = "Fire Blast 1st VM"
+trigger = { type = "combat_start" }
+duration_secs = 20.0
+color = [219, 32, 34, 255]
+icon_ability_id = 4250359765663744
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "trandos_fire_blast"
+name = "Fire Blast"
+trigger = { type = "ability_cast", abilities = [4250359765663744] }
+duration_secs = 16.0
+color = [224, 29, 30, 255]
+icon_ability_id = 4250359765663744
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "trandos_endothermic"
+name = "Endothermic"
+trigger = { type = "ability_cast", abilities = [4250291046187008] }
+duration_secs = 12.0
+color = [28, 42, 219, 255]
+icon_ability_id = 4250291046187008
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "trandos_train_arrive"
+name = "Train Arrive"
+trigger = { type = "ability_cast", abilities = [833455583657984] }
+duration_secs = 45.0
+color = [127, 32, 219, 255]
+icon_ability_id = 833455583657984
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "trandos_caustic_plume"
+name = "Caustic Plume"
+trigger = { type = "ability_cast", abilities = [4265293366951936] }
+duration_secs = 30.0
+color = [48, 219, 37, 255]
+icon_ability_id = 4265293366951936
+difficulties = ["veteran", "master"]
+conditions = [
+  { type = "counter_compare", counter_id = "trandos_damagecountera", operator = "eq", value = 1 },
+]
+
+[[boss.timer]]
+id = "trandos_caustic_reset"
+name = "Caustic reset"
+trigger = { type = "timer_expires", timer_id = "trandos_caustic_plume" }
+is_alert = true
+alert_text = "Caustic reset"
+color = [48, 219, 37, 255]
+icon_ability_id = 4265293366951936
+difficulties = ["veteran", "master"]
+chains_to = "194e5fb9-73a4-4c0e-a41a-6bd7bc363307"
+
+[[boss.timer]]
+id = "trandos_cleanse_hissy_tank"
+name = "Cleanse hissy tank"
+is_alert = true
+color = [0, 255, 150, 255]
+icon_ability_id = 4268458757849388
+difficulties = ["veteran", "master"]
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4268458757849388]
+
+[[boss.timer]]
+id = "trandos_irradiated_fire_blast_1st"
+name = "Irradiated Fire Blast 1st"
+trigger = { type = "npc_appears", selector = ["Ultimate Hunter"] }
+duration_secs = 15.0
+color = [224, 29, 30, 255]
+icon_ability_id = 4381072800350208
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "trandos_irradiated_fire_blast_db"
+name = "Irradiated Fire Blast DB"
+trigger = { type = "ability_cast", abilities = [4381059915448320] }
+duration_secs = 12.5
+color = [224, 29, 31, 255]
+icon_ability_id = 4381072800350208
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "trandos_irradiated_fire_blast"
+name = "Irradiated Fire Blast"
+trigger = { type = "ability_cast", abilities = [4381072800350208] }
+duration_secs = 16.0
+color = [224, 25, 24, 255]
+icon_ability_id = 4381072800350208
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "trandos_divebomb_u"
+name = "Divebomb U"
+trigger = { type = "ability_cast", abilities = [4381059915448320] }
+duration_secs = 24.5
+color = [224, 107, 24, 255]
+icon_ability_id = 4381059915448320
+difficulties = ["master"]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Huntmaster
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "huntmaster"
+name = "Huntmaster"
+difficulties = ["story", "veteran", "master"]
+has_victory_trigger = true
+victory_trigger = { type = "any_of", conditions = [
+  { type = "effect_removed", effects = [
+    4385986242937128,
+  ], source = { selector = [
+    0,
+  ] } },
+  { type = "entity_death", selector = [
+    "Shelleigh",
+  ] },
+] }
+victory_conditions = [
+  { type = "any_of", conditions = [
+    { type = "counter_compare", counter_id = "huntmaster_adrenaline_rush", operator = "gte", value = 1 },
+    { type = "phase_active", phase_ids = [
+      "shelleigh",
+    ] },
+  ] },
+]
+
+[[boss.counter]]
+id = "huntmaster_adrenaline_rush"
+name = "Huntmaster Adrenaline Rush Proc"
+increment_on = { type = "effect_applied", effects = [
+  4281979314896896,
+], target = { selector = [
+  "Huntmaster",
+] } }
+
+[[boss.entities]]
+name = "Huntmaster"
+ids = [4265104388390912]
+is_boss = true
+is_kill_target = false
+
+[[boss.entities.hp_markers]]
+hp_percent = 35.0
+label = "Shelleigh appears"
+
+[[boss.entities]]
+name = "Shelleigh"
+ids = [4281661487316992, 4330237567434752]
+is_boss = true
+is_kill_target = false
+
+[[boss.counter]]
+id = "shelleigh_appeared"
+name = "Shelleigh Appears"
+increment_on = { type = "npc_appears", selector = ["Shelleigh"] }
+
+[[boss.phases]]
+id = "huntmaster"
+name = "Huntmaster"
+start_trigger = { type = "any_of", conditions = [
+  { type = "combat_start" },
+  { type = "phase_ended", phase_id = "huntmaster_holdout" },
+] }
+conditions = [
+  { type = "counter_compare", counter_id = "shelleigh_appeared", operator = "eq", value = 0 },
+]
+
+[[boss.phases]]
+id = "huntmaster_fortress"
+name = "Fortress"
+start_trigger = { type = "ability_cast", abilities = [
+  4271405105414144,
+  4387871733579776,
+] }
+end_trigger = { type = "ability_cast", abilities = [4277521138843648] }
+conditions = [
+  { type = "counter_compare", counter_id = "shelleigh_appeared", operator = "eq", value = 0 },
+]
+
+[[boss.phases]]
+id = "huntmaster_holdout"
+name = "Holdout"
+start_trigger = { type = "phase_ended", phase_id = "huntmaster_fortress" }
+end_trigger = { type = "effect_removed", effects = [4277787426816333] }
+conditions = [
+  { type = "counter_compare", counter_id = "shelleigh_appeared", operator = "eq", value = 0 },
+]
+
+[[boss.phases]]
+id = "shelleigh"
+name = "Shelleigh"
+start_trigger = { type = "npc_appears", selector = ["Shelleigh"] }
+
+[[boss.timer]]
+id = "huntmaster_shotroll_cs_vm"
+name = "Shotroll CS"
+display_text = "Shotroll"
+trigger = { type = "combat_start" }
+duration_secs = 48.0
+color = [18, 116, 26, 255]
+icon_ability_id = 4335425887928320
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "huntmaster_primal_fear_cs"
+name = "Primal Fear CS"
+display_text = "Primal Fear"
+trigger = { type = "combat_start" }
+duration_secs = 42.0
+color = [150, 0, 255, 255]
+icon_ability_id = 4335425887928320
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "huntmaster_primal_fear_1st_vm"
+name = "Primal Fear CS VM"
+trigger = { type = "combat_start" }
+duration_secs = 36.0
+color = [150, 0, 255, 255]
+icon_ability_id = 4335425887928320
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "huntmaster_shotroll_cs"
+name = "Shotroll CS"
+display_text = "Shotroll"
+trigger = { type = "combat_start" }
+duration_secs = 54.0
+color = [18, 116, 26, 255]
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "huntmaster_penetratign_shot_p3_vm"
+name = "Penetrating Shot P3 VM"
+trigger = { type = "timer_expires", timer_id = "huntmaster_p3_jump" }
+duration_secs = 12.0
+color = [255, 100, 100, 255]
+icon_ability_id = 4269777312808960
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "huntmaster_p3_jump"
+name = "P3 jump"
+trigger = { type = "ability_cast", abilities = [4277787426816000] }
+duration_secs = 43.0
+color = [100, 149, 237, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_firestorm_grenade_p3_vm"
+name = "Firestorm Grenade P3 VM"
+display_text = "Firestorm Grenade"
+trigger = { type = "timer_expires", timer_id = "huntmaster_p3_jump" }
+duration_secs = 16.0
+color = [255, 150, 0, 255]
+icon_ability_id = 4271559724236800
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "huntmaster_firestorm_grenade_p3"
+name = "Firestorm Grenade P3"
+display_text = "Firestorm Grenade"
+trigger = { type = "timer_expires", timer_id = "huntmaster_p3_jump" }
+duration_secs = 12.0
+color = [255, 150, 0, 255]
+icon_ability_id = 4271559724236800
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "huntmaster_firestorm_grenade_1st"
+name = "Firestorm Grenade 1st"
+display_text = "Firestorm Grenade"
+trigger = { type = "combat_start" }
+duration_secs = 16.0
+color = [255, 150, 0, 255]
+icon_ability_id = 4271559724236800
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_firestorm_grenade"
+name = "Firestorm Grenade"
+trigger = { type = "ability_cast", abilities = [4271559724236800] }
+duration_secs = 32.0
+color = [255, 150, 0, 255]
+icon_ability_id = 4271559724236800
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_fortress"
+name = "Fortress"
+trigger = { type = "combat_start" }
+duration_secs = 75.0
+color = [106, 62, 5, 255]
+icon_ability_id = 4271405105414144
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_flying_fortress"
+name = "Flying Fortress"
+trigger = { type = "timer_expires", timer_id = "huntmaster_p3_jump" }
+duration_secs = 75.0
+color = [106, 62, 5, 255]
+icon_ability_id = 4271405105414144
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_scat_pv_pen"
+name = "Scat/PV/Pen"
+trigger = { type = "ability_cast", abilities = [4387871733579776] }
+duration_secs = 25.0
+color = [175, 0, 0, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_powershot_volley_1st"
+name = "Powershot Volley 1st"
+trigger = { type = "combat_start" }
+duration_secs = 8.0
+color = [0, 75, 150, 255]
+icon_ability_id = 4269773017841664
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_powershot_volley"
+name = "Powershot Volley"
+trigger = { type = "ability_cast", abilities = [4269773017841664] }
+duration_secs = 53.1
+color = [0, 75, 150, 255]
+icon_ability_id = 4269773017841664
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_powershot_scatter_p3_vm"
+name = "Powershot/Scatter P3 VM"
+trigger = { type = "timer_expires", timer_id = "huntmaster_p3_jump" }
+duration_secs = 48.0
+color = [175, 0, 0, 255]
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "huntmaster_egg_snipe_p3"
+name = "Egg Snipe P3"
+trigger = { type = "timer_expires", timer_id = "huntmaster_p3_jump" }
+duration_secs = 28.0
+color = [255, 50, 255, 255]
+icon_ability_id = 4385986242936832
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "huntmaster_penetratign_shot_p3"
+name = "Penetratign Shot P3"
+trigger = { type = "timer_expires", timer_id = "huntmaster_p3_jump" }
+duration_secs = 6.0
+color = [255, 100, 100, 255]
+icon_ability_id = 4269777312808960
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "huntmaster_primal_fear_p3"
+name = "Primal Fear P3"
+trigger = { type = "timer_expires", timer_id = "huntmaster_p3_jump" }
+duration_secs = 34.0
+color = [150, 0, 255, 255]
+icon_ability_id = 4335425887928320
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_egg_snipe_1st"
+name = "Egg Snipe 1st"
+trigger = { type = "combat_start" }
+duration_secs = 36.0
+color = [255, 50, 255, 255]
+icon_ability_id = 4385986242936832
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "huntmaster_scatterblast_1st"
+name = "Scatterblast 1st"
+trigger = { type = "combat_start" }
+duration_secs = 24.0
+color = [201, 197, 45, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_scatterblast"
+name = "Scatterblast"
+trigger = { type = "ability_cast", abilities = [4335125240217600] }
+duration_secs = 53.0
+color = [205, 200, 43, 255]
+icon_ability_id = 4335125240217600
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_penetrating_shot_1st"
+name = "Penetrating Shot 1st"
+trigger = { type = "combat_start" }
+duration_secs = 20.0
+color = [255, 100, 100, 255]
+icon_ability_id = 4269777312808960
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_penetrating_shot"
+name = "Penetrating Shot"
+trigger = { type = "ability_cast", abilities = [4269777312808960] }
+duration_secs = 37.0
+color = [255, 100, 100, 255]
+icon_ability_id = 4269777312808960
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_primal_fear"
+name = "Primal Fear"
+trigger = { type = "ability_cast", abilities = [4335425887928320] }
+duration_secs = 31.0
+color = [150, 0, 255, 255]
+icon_ability_id = 4335425887928320
+difficulties = ["master"]
+
+[[boss.timer]]
+id = "huntmaster_primal_fear_vm"
+name = "Primal Fear VM"
+trigger = { type = "ability_cast", abilities = [4335425887928320] }
+duration_secs = 34.0
+color = [150, 0, 255, 255]
+icon_ability_id = 4335425887928320
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "huntmaster_power_scater"
+name = "Power/Scatter"
+trigger = { type = "ability_cast", abilities = [4336065838055424] }
+duration_secs = 16.0
+color = [175, 0, 0, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "huntmaster_grenade"
+name = "Grenade"
+alert_text = "Grenade on You!"
+is_alert = true
+color = [255, 150, 0, 255]
+icon_ability_id = 4271559724236800
+difficulties = ["story", "veteran", "master"]
+enabled = true
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4271559724236800]
+source = "any"
+target = "local_player"
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Boss 4: Apex Vanguard
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "apex_vanguard"
+name = "Apex Vanguard"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Apex Vanguard"
+ids = [4282872668094464, 4350020186800128]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities.hp_markers]]
+hp_percent = 5.0
+label = "Last Ditch"
+
+[[boss.entities.shields]]
+label = "Voltinator"
+start_trigger = { type = "effect_applied", effects = [
+  4310755595780426,
+  4310755595780354,
+  4310755595780404,
+  4310755595780434,
+] }
+end_trigger = { type = "effect_removed", effects = [
+  4310755595780426,
+  4310755595780354,
+  4310755595780404,
+  4310755595780434,
+] }
+
+[[boss.entities.shields.hp]]
+difficulties = ["master"]
+group_size = 8
+total = 1428519
+
+[[boss.entities.shields.hp]]
+difficulties = ["master"]
+group_size = 16
+total = 3576202
+
+[[boss.entities.shields.hp]]
+difficulties = ["veteran"]
+group_size = 8
+total = 1102670
+
+[[boss.entities.shields.hp]]
+difficulties = ["veteran"]
+group_size = 16
+total = 2859828
+
+[[boss.entities]]
+name = "Power Transformer"
+ids = [4297557161279488]
+is_boss = false
+show_on_hp_overlay = false
+is_kill_target = false
+
+[[boss.counters]]
+id = "apex_voltinator_active"
+name = "Voltinator Active"
+increment_on = { type = "effect_applied", effects = [
+  4310755595780426,
+  4310755595780354,
+  4310755595780404,
+  4310755595780434,
+] }
+decrement_on = { type = "effect_removed", effects = [
+  4310755595780426,
+  4310755595780354,
+  4310755595780404,
+  4310755595780434,
+] }
+
+[[boss.counters]]
+id = "apex_vanguard_zone_ready"
+name = "zone ready"
+
+[boss.counters.increment_on]
+type = "any_of"
+
+[[boss.counters.increment_on.conditions]]
+type = "timer_expires"
+timer_id = "apex_vanguard_zone_defense"
+
+[[boss.counters.increment_on.conditions]]
+type = "ability_cast"
+abilities = [4297819154284544]
+
+[boss.counters.decrement_on]
+type = "ability_cast"
+abilities = [4333050771013632]
+
+[[boss.counters]]
+id = "apex_vanguard_rockets_ready"
+name = "rockets ready"
+
+[boss.counters.increment_on]
+type = "timer_expires"
+timer_id = "apex_vanguard_rockets_cd_not_displayed"
+
+[boss.counters.reset_on]
+type = "ability_cast"
+abilities = [4308741256118272]
+
+[[boss.challenges]]
+id = "apex_volt_dmg"
+name = "Voltinator Damage"
+metric = "damage_absorbed"
+enabled = true
+color = [255, 120, 0, 255]
+columns = "per_second_percent"
+
+[[boss.challenges.conditions]]
+type = "target"
+match = "boss"
+
+[[boss.challenges.conditions]]
+type = "counter"
+counter_id = "apex_voltinator_active"
+operator = "eq"
+value = 1
+
+[[boss.phases]]
+id = "apex_start"
+name = "Apex Start"
+trigger = { type = "combat_start" }
+
+[[boss.phases]]
+id = "apex_transformer"
+name = "Transformer"
+trigger = { type = "npc_appears", selector = ["Power Transformer"] }
+end_trigger = { type = "boss_hp_below", hp_percent = 10.0, selector = [
+  "Power Transformer",
+] }
+
+[[boss.phases]]
+id = "apex_phase_1"
+name = "Apex Phase 1"
+trigger = { type = "phase_ended", phase_id = "apex_transformer" }
+end_trigger = { type = "any_of", conditions = [
+  { type = "boss_hp_below", hp_percent = 59.0 },
+] }
+
+[[boss.phases]]
+id = "apex_main_2"
+name = "Apex Phase 2"
+trigger = { type = "phase_ended", phase_id = "apex_phase_1" }
+
+[[boss.phases]]
+id = "apex_burn"
+name = "Burn"
+trigger = { type = "ability_cast", abilities = [4329997049266176] }
+
+# [[boss.challenges]]
+# id = "apex_volt_dmg"
+# name = "Voltinator Damage"
+# metric = "damage"
+# phase = "apex_voltinator"
+#
+[[boss.timer]]
+id = "apex_photo_hp"
+name = "Photogenesis HP"
+is_alert = true
+alert_text = "Photogensis HP threshold"
+color = [53, 211, 214, 255]
+difficulties = ["veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "boss_hp_below"
+hp_percent = 94.0
+selector = ["Apex Vanguard"]
+
+[boss.timer.audio]
+enabled = false
+offset = 0
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_1st_acid"
+name = "1st Acid"
+display_text = "Acid Blast"
+duration_secs = 10.0
+color = [200, 200, 50, 255]
+icon_ability_id = 4305094828883968
+difficulties = ["veteran", "master"]
+enabled = true
+show_at_secs = 8.0
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "combat_start"
+
+[boss.timer.audio]
+enabled = false
+offset = 0
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_acid_blast"
+name = "Acid Blast"
+duration_secs = 30.0
+color = [200, 200, 50, 255]
+icon_ability_id = 4305094828883968
+difficulties = ["story", "veteran", "master"]
+enabled = true
+show_at_secs = 8.0
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4305094828883968]
+source = "any"
+target = "any"
+
+[boss.timer.audio]
+enabled = false
+offset = 0
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_contagion"
+name = "Contagion"
+duration_secs = 63.0
+color = [0, 250, 250, 255]
+icon_ability_id = 4306117031100416
+difficulties = ["veteran", "master"]
+enabled = true
+show_at_secs = 8.0
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4306117031100416]
+source = "any"
+target = "any"
+
+[boss.timer.audio]
+enabled = false
+offset = 0
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_1st_contagion"
+name = "1st Contagion"
+display_text = "Contagion"
+duration_secs = 30.0
+color = [5, 250, 250, 255]
+icon_ability_id = 4306117031100416
+difficulties = ["veteran", "master"]
+enabled = true
+show_at_secs = 8.0
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "combat_start"
+
+[boss.timer.audio]
+enabled = false
+offset = 0
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_2nd_deluge"
+name = "2nd Deluge"
+display_text = "Acid Deluge"
+duration_secs = 122.0
+color = [100, 150, 50, 255]
+icon_ability_id = 4330254747303936
+difficulties = ["story", "veteran", "master"]
+enabled = true
+show_at_secs = 30.0
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4330254747303936]
+source = "any"
+target = "any"
+
+[boss.timer.audio]
+enabled = false
+offset = 0
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_1st_bloodlust"
+name = "1st Bloodlust"
+display_text = "Bloodlust"
+duration_secs = 60.0
+icon_ability_id = 4385835919081472
+color = [150, 0, 0, 255]
+difficulties = ["master"]
+enabled = true
+show_at_secs = 45.0
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4297819154284544]
+source = "any"
+target = "any"
+
+[boss.timer.audio]
+enabled = false
+file = "Alarm.mp3"
+offset = 1
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_bloodlust"
+name = "Bloodlust"
+duration_secs = 63.0
+color = [150, 0, 0, 255]
+icon_ability_id = 4385835919081472
+difficulties = ["master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4385835919081472]
+source = "any"
+target = "any"
+
+[boss.timer.audio]
+enabled = false
+file = "Alarm.mp3"
+offset = 1
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_1st_red_venom"
+name = "1st Red Venom"
+display_text = "Red Venom"
+duration_secs = 60.0
+color = [200, 0, 250, 255]
+icon_ability_id = 4306151390838784
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4297819154284544]
+source = "any"
+target = "any"
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_1st_mass_target"
+name = "1st Mass Target"
+display_text = "Mass Target Lock"
+duration_secs = 60.0
+color = [255, 128, 0, 255]
+icon_ability_id = 4308938824613888
+difficulties = ["veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "apex_vanguard_1st_red_venom"
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_1st_voltinator"
+name = "1st Voltinator"
+display_text = "Voltinator"
+duration_secs = 60.0
+color = [255, 255, 255, 255]
+icon_ability_id = 4310493602775316
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "apex_vanguard_1st_mass_target"
+
+[boss.timer.audio]
+enabled = false
+offset = 0
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_venom_or_target"
+name = "Venom OR Target Split"
+display_text = "Venom OR Target"
+duration_secs = 60.0
+color = [255, 0, 0, 255]
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "apex_vanguard_1st_voltinator"
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_first_venom_or_target_part_2"
+name = "Venom OR Target Part 2"
+duration_secs = 30.0
+color = [255, 0, 0, 255]
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "any_of"
+
+[[boss.timer.trigger.conditions]]
+type = "timer_expires"
+timer_id = "apex_vanguard_venom_or_target"
+
+[[boss.timer.trigger.conditions]]
+type = "boss_hp_below"
+hp_percent = 59.0
+selector = ["Apex Vanguard"]
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_venom_or_volt_split"
+name = "Venom OR Volt Split"
+display_text = "Venom OR Voltinator"
+duration_secs = 60.0
+color = [200, 8, 250, 255]
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "apex_vanguard_first_venom_or_target_part_2"
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_venom_or_volt_part_2"
+name = "Venom OR Volt Part 2"
+display_text = "Venom OR Voltinator"
+duration_secs = 30.0
+color = [200, 0, 250, 255]
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "apex_vanguard_venom_or_volt_split"
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_target_or_volt_split"
+name = "Target OR Volt Split"
+display_text = "Target OR Volt"
+duration_secs = 60.0
+color = [255, 255, 255, 255]
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "apex_vanguard_venom_or_volt_part_2"
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_target_or_volt_part_2"
+name = "Target OR Volt Part 2"
+display_text = "Target OR Volt"
+duration_secs = 30.0
+color = [255, 255, 255, 255]
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "apex_vanguard_target_or_volt_split"
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_ultraviolence"
+name = "ULTRAVIOLENCE"
+duration_secs = 63.0
+color = [150, 0, 0, 255]
+icon_ability_id = 4409239195877376
+difficulties = ["story", "veteran", "master"]
+enabled = true
+show_at_secs = 45.0
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4409239195877376]
+source = "any"
+target = "any"
+
+[boss.timer.audio]
+enabled = false
+file = "Alarm.mp3"
+offset = 0
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_1st_deluge"
+name = "1st Deluge"
+display_text = "Acid Deluge"
+duration_secs = 60.0
+color = [100, 150, 50, 255]
+icon_ability_id = 4330254747303936
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "apex_vanguard_target_or_volt_part_2"
+
+[boss.timer.audio]
+enabled = false
+offset = 0
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_zone_defense"
+name = "Zone Defense"
+duration_secs = 325.0
+color = [250, 250, 0, 255]
+icon_ability_id = 4333050771013632
+difficulties = ["veteran", "master"]
+display_targets = []
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4333050771013632]
+source = "any"
+target = "any"
+
+[boss.timer.audio]
+enabled = false
+offset = 0
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_zone"
+name = "Zone defense"
+display_text = "Zone defense"
+duration_secs = 5.0
+color = [255, 255, 0, 255]
+icon_ability_id = 4333050771013632
+difficulties = ["story", "veteran", "master"]
+display_targets = ["timers_a"]
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4296758297362432]
+
+[[boss.timer.conditions]]
+type = "counter_compare"
+counter_id = "apex_vanguard_zone_ready"
+operator = "eq"
+value = 1
+
+[boss.timer.cancel_trigger]
+type = "effect_applied"
+effects = [4310493602775316]
+
+[[boss.timer]]
+id = "apex_vanguard_target_lock_p3"
+name = "Target Lock P3"
+display_text = "Mass Target Lock"
+duration_secs = 30.0
+color = [255, 0, 0, 255]
+icon_ability_id = 4308938824613888
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4330254747303936]
+source = "any"
+target = "any"
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_voltinator_p3"
+name = "Voltinator P3"
+display_text = "Voltinator"
+duration_secs = 30.0
+color = [255, 255, 255, 255]
+icon_ability_id = 4310493602775316
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "apex_vanguard_target_lock_p3"
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_red_venom_p4"
+name = "Red Venom P4"
+display_text = "Red Venom"
+duration_secs = 60.0
+color = [200, 0, 250, 255]
+icon_ability_id = 4306151390838784
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "apex_vanguard_voltinator_p3"
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_target_and_venom"
+name = "Target AND Venom"
+duration_secs = 30.0
+color = [255, 0, 0, 255]
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "any_of"
+
+[[boss.timer.trigger.conditions]]
+type = "timer_expires"
+timer_id = "apex_vanguard_red_venom_p4"
+
+[[boss.timer.trigger.conditions]]
+type = "boss_hp_below"
+hp_percent = 16.0
+selector = ["Apex Vanguard"]
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_target_lock_p4"
+name = "Target Lock P4"
+display_text = "Mass Target Lock"
+duration_secs = 30.0
+color = [255, 0, 0, 255]
+icon_ability_id = 4308938824613888
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "apex_vanguard_target_and_venom"
+
+[boss.timer.audio]
+enabled = false
+offset = 3
+countdown_start = 5
+
+[[boss.timer]]
+id = "apex_vanguard_1st_rockets"
+name = "1st Rockets"
+display_text = "Rocket salvo"
+duration_secs = 16.0
+color = [250, 150, 0, 255]
+icon_ability_id = 4308741256118684
+difficulties = ["veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "combat_start"
+
+[boss.timer.audio]
+enabled = false
+file = "Alarm.mp3"
+offset = 2
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_rockets"
+name = "Rocket salvo"
+duration_secs = 24.0
+color = [250, 150, 0, 255]
+icon_ability_id = 4308741256118684
+difficulties = ["veteran", "master"]
+enabled = true
+show_at_secs = 8.0
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4308741256118272]
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "ability_cast"
+abilities = [4297784794546176]
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "effect_applied"
+effects = [4310493602775316, 4308938824613888, 4333050771013632]
+
+[boss.timer.audio]
+enabled = false
+file = "Alarm.mp3"
+offset = 2
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_rocket_after_photogenesis"
+name = "Rockets after photogenesis"
+display_text = "Rocket salvo"
+duration_secs = 12.5
+color = [255, 150, 0, 255]
+icon_ability_id = 4308741256118684
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 8.0
+display_targets = ["timers_a"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4297819154284544]
+
+[[boss.timer]]
+id = "apex_vanguard_rocket_after_volt"
+name = "Rockets after volt"
+display_text = "Rocket salvo"
+duration_secs = 5.0
+color = [255, 150, 0, 255]
+icon_ability_id = 4308741256118684
+difficulties = ["story", "veteran", "master"]
+display_targets = ["timers_a"]
+
+[boss.timer.trigger]
+type = "effect_removed"
+effects = [
+  4310755595780426,
+  4310755595780434,
+  4310755595780354,
+  4310755595780404,
+]
+
+[boss.timer.cancel_trigger]
+type = "effect_applied"
+effects = [4308938824613888, 4333050771013632]
+
+[[boss.timer]]
+id = "apex_vanguard_rockets_cd_not_displayed"
+name = "Rockets cd (not displayed)"
+duration_secs = 24.0
+color = [255, 150, 0, 255]
+difficulties = ["story", "veteran", "master"]
+can_be_refreshed = true
+display_targets = []
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4308741256118272]
+
+[[boss.timer]]
+id = "apex_vanguard_rockets_after_zone"
+name = "Rockets after zone (not broken)"
+display_text = "Rocket salvo"
+duration_secs = 23.0
+color = [255, 150, 0, 255]
+icon_ability_id = 4308741256118684
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 8.0
+display_targets = ["timers_a"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4333050771013632]
+
+[boss.timer.cancel_trigger]
+type = "effect_applied"
+effects = [4310493602775316, 4296758297362432]
+
+[[boss.timer]]
+id = "apex_vanguard_rockets_after_broken_mass_or_zone"
+name = "Rockets after broken mass or zone"
+display_text = "Rocket salvo"
+duration_secs = 5.0
+color = [255, 150, 0, 255]
+icon_ability_id = 4308741256118684
+difficulties = ["story", "veteran", "master"]
+display_targets = ["timers_a"]
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4383095729946624, 4296758297362432]
+
+[[boss.timer.conditions]]
+type = "counter_compare"
+counter_id = "apex_vanguard_zone_ready"
+operator = "eq"
+value = 0
+
+[[boss.timer.conditions]]
+type = "any_of"
+
+[[boss.timer.conditions.conditions]]
+type = "timer_time_remaining"
+timer_id = "apex_vanguard_rockets_cd_not_displayed"
+operator = "lt"
+value = 10.0
+
+[[boss.timer.conditions.conditions]]
+type = "counter_compare"
+counter_id = "apex_vanguard_rockets_ready"
+operator = "eq"
+value = 1
+
+[[boss.timer.conditions]]
+type = "counter_compare"
+counter_id = "apex_voltinator_active"
+operator = "eq"
+value = 0
+
+[boss.timer.cancel_trigger]
+type = "effect_applied"
+effects = [4310493602775316, 4308938824613888]
+
+[[boss.timer]]
+id = "apex_vanguard_rockets_after_broken_mass_or_zone_alt"
+name = "Rockets after broken mass or zone (alt)"
+display_text = "Rocket salvo"
+duration_secs = 10.0
+color = [255, 150, 0, 255]
+icon_ability_id = 4308741256118684
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 8.0
+display_targets = ["timers_a"]
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4383095729946624, 4296758297362432]
+
+[[boss.timer.conditions]]
+type = "counter_compare"
+counter_id = "apex_vanguard_zone_ready"
+operator = "eq"
+value = 0
+
+[[boss.timer.conditions]]
+type = "timer_time_remaining"
+timer_id = "apex_vanguard_rockets_cd_not_displayed"
+operator = "gte"
+value = 10.0
+
+[[boss.timer.conditions]]
+type = "counter_compare"
+counter_id = "apex_voltinator_active"
+operator = "eq"
+value = 0
+
+[boss.timer.cancel_trigger]
+type = "effect_applied"
+effects = [4310493602775316, 4308938824613888]
+
+[[boss.timer]]
+id = "apex_vanguard_1st_flare"
+name = "1st Flare"
+duration_secs = 2.5
+is_alert = true
+color = [255, 0, 150, 255]
+icon_ability_id = 4296410405011456
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "entity_death"
+selector = [4297557161279488]
+
+[boss.timer.audio]
+enabled = false
+file = "Alert.mp3"
+offset = 0
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_flare"
+name = "Flare"
+display_text = "Flare Ends"
+duration_secs = 30.0
+color = [255, 0, 150, 255]
+icon_ability_id = 4296410405011456
+difficulties = ["veteran", "master"]
+enabled = true
+show_at_secs = 10.0
+display_target = "timers_a"
+can_be_refreshed = true
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4296410405011456]
+source = "any_player"
+target = "any"
+
+[boss.timer.audio]
+enabled = false
+file = "Alert.mp3"
+offset = 1
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_flares_crafted"
+name = "Flares crafted"
+duration_secs = 45.0
+alert_on = "on_expire"
+alert_text = "Flares ready!"
+color = [200, 0, 150, 255]
+icon_ability_id = 4296410405011456
+difficulties = ["story", "veteran", "master"]
+enabled = true
+can_be_refreshed = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4326784413728768]
+source = "any_player"
+target = "any"
+
+[boss.timer.audio]
+file = "Alert.mp3"
+offset = 1
+countdown_start = 3
+
+[[boss.timer]]
+id = "apex_vanguard_bombardment"
+name = "Bombardment"
+duration_secs = 32.0
+color = [0, 150, 250, 255]
+icon_ability_id = 4308951709515776
+difficulties = ["story", "veteran", "master"]
+enabled = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4308938824613888]
+source = "any"
+target = "local_player"
+
+[boss.timer.cancel_trigger]
+type = "effect_removed"
+effects = [4308938824613888]
+source = "any"
+target = "any_player"
+
+[boss.timer.audio]
+enabled = false
+offset = 0
+countdown_start = 0
+
+[[boss.timer]]
+id = "apex_vanguard_last_ditch"
+name = "Last ditch"
+is_alert = true
+color = [200, 0, 0, 255]
+difficulties = ["story", "veteran", "master"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "apex_burn"

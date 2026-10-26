@@ -1,0 +1,36 @@
+[area]
+name = "Children of Nul"
+id = 945872057663605
+
+[[boss]]
+id = "nul_acolyte"
+name = "Nul Acolyte"
+difficulties = ["story", "veteran"]
+
+[[boss.entities]]
+name = "Nul Acolyte"
+ids = [4922389003501568]
+is_boss = true
+triggers_encounter = true
+
+[[boss]]
+id = "force_beast"
+name = "Force Beast"
+difficulties = ["story", "veteran"]
+
+[[boss.entities]]
+name = "Force Beast"
+ids = [4932512241418240]
+is_boss = true
+triggers_encounter = true
+
+[[boss]]
+id = "last_daughter"
+name = "Last Daughter"
+difficulties = ["story", "veteran"]
+
+[[boss.entities]]
+name = "Last Daughter"
+ids = [4946380690817024]
+is_boss = true
+triggers_encounter = true

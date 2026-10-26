@@ -1,0 +1,2021 @@
+[area]
+name = "R-4 Anomaly"
+id = 833571547775799
+
+# "Anomalously Skilled" timer starts at the start line past the elevator (VM only).
+[area.timer_start]
+difficulties = ["veteran"]
+position = [
+  { entity = "source", axis = "x", op = "lt", value = 288.0 },
+  { entity = "source", axis = "y", op = "between", min = 8.0, max = 23.0 },
+  { entity = "source", axis = "z", op = "between", min = 424.0, max = 431.0 },
+]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: IP-CPT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "ip_cpt"
+name = "IP-CPT"
+difficulties = ["story", "veteran"]
+
+[[boss.entities]]
+name = "IP-CPT"
+ids = [4494653210492928, 4467247024177152]
+is_boss = true
+is_kill_target = true
+
+# -- Hp markers
+[[boss.entities.hp_markers]]
+hp_percent = 75.0
+label = "Goes up"
+
+[[boss.entities.hp_markers.conditions]]
+type = "phase_active"
+phase_ids = ["ip_main"]
+
+[[boss.entities.hp_markers]]
+hp_percent = 50.0
+label = "Goes up"
+
+[[boss.entities.hp_markers.conditions]]
+type = "phase_active"
+phase_ids = ["ip_main"]
+
+[[boss.entities.hp_markers]]
+hp_percent = 25.0
+label = "Goes up"
+
+[[boss.entities.hp_markers.conditions]]
+type = "phase_active"
+phase_ids = ["ip_main"]
+
+[[boss.entities]]
+name = "Intrusion ID Unit"
+ids = [4470455364747264, 4470446774812672, 4470451069779968, 4470442479845376]
+is_boss = false
+
+[[boss.phases]]
+id = "ip_main"
+name = "IP-CPT"
+start_trigger = { type = "any_of", conditions = [
+  { type = "combat_start" },
+  { type = "phase_ended", phase_id = "ip_bombs" },
+] }
+end_trigger = { type = "npc_appears", selector = ["Intrusion ID Unit"] }
+conditions = [
+  { type = "counter_compare", counter_id = "ip_cpt_bomb_phase", operator = "lte", value = 2 },
+]
+[[boss.phases]]
+id = "ip_bombs"
+name = "Bombs"
+start_trigger = { type = "phase_ended", phase_id = "ip_main" }
+end_trigger = { type = "effect_removed", effects = [4471627890819336] }
+conditions = [
+  { type = "counter_compare", counter_id = "ip_cpt_bomb_phase", operator = "lt", value = 2 },
+]
+[[boss.phases]]
+id = "burn"
+name = "Burn"
+start_trigger = { type = "ability_cast", abilities = [4471730970034176] }
+
+[[boss.challenges]]
+id = "ip_cpt_burn"
+name = "Burn"
+metric = "damage"
+enabled = true
+columns = "total_per_second"
+
+[[boss.challenges.conditions]]
+type = "phase"
+phase_ids = ["burn"]
+
+[[boss.challenges]]
+id = "ip_cpt_big_grenade"
+name = "Big Grenade"
+metric = "effect_count"
+enabled = true
+columns = "total_only"
+difficulties = ["story", "veteran"]
+
+[[boss.challenges.conditions]]
+type = "effect"
+effect_ids = [4471271408533778]
+
+[[boss.challenges.conditions]]
+type = "target"
+match = "any_player"
+# -- Counters
+[[boss.counters]]
+id = "ip_cpt_stacks"
+name = "Stacks"
+
+[[boss.challenges]]
+id = "ip_cpt_environment_stacks"
+name = "Environment Stacks"
+metric = "effect_stacks"
+enabled = true
+columns = "total_only"
+
+[[boss.challenges.conditions]]
+type = "effect"
+effect_ids = [4472005847941376]
+
+[[boss.challenges.conditions]]
+type = "target"
+match = "any_player"
+
+[boss.counters.increment_on]
+type = "effect_applied"
+
+[boss.counters.track_effect_stacks]
+effects = [4472005847941376]
+target = "local_player"
+
+[[boss.counters]]
+id = "ip_cpt_intrusion_death"
+name = "Intrusion death"
+initial_value = 0
+decrement = false
+
+[boss.counters.increment_on]
+type = "entity_death"
+selector = ["Intrusion ID Unit"]
+
+[[boss.counters]]
+id = "ip_cpt_big_bombs"
+name = "Big bombs"
+initial_value = 0
+decrement = false
+
+[boss.counters.increment_on]
+type = "effect_applied"
+effects = [4471271408533778]
+source = "any"
+target = "any"
+
+[[boss.counters]]
+id = "ip_cpt_bomb_phase"
+name = "Bomb Phases"
+initial_value = 0
+
+[boss.counters.increment_on]
+type = "phase_entered"
+phase_id = "ip_bombs"
+
+# -- Timers
+[[boss.timer]]
+id = "ip_cpt_big_grenade"
+name = "Big Grenade"
+trigger = { type = "effect_applied", effects = [
+  4471271408533778,
+], target = "local_player" }
+duration_secs = 8.5
+alert_on = "countdown"
+alert_text = "Grenade explosion"
+alert_countdown_secs = 3.0
+color = [200, 0, 0, 255]
+icon_ability_id = 4471271408533778
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "ip_cpt_back_wall_not_safe"
+name = "Back wall not safe"
+duration_secs = 8.5
+color = [255, 128, 0, 255]
+icon_ability_id = 4471271408533778
+difficulties = ["veteran"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "any_of"
+
+[[boss.timer.trigger.conditions]]
+type = "counter_reaches"
+counter_id = "ip_cpt_big_bombs"
+value = 6
+
+[[boss.timer.trigger.conditions]]
+type = "counter_reaches"
+counter_id = "ip_cpt_big_bombs"
+value = 18
+
+[[boss.timer]]
+id = "ip_cpt_side_wall_not_safe"
+name = "Side wall not safe"
+duration_secs = 8.5
+color = [255, 128, 0, 255]
+icon_ability_id = 4471271408533778
+difficulties = ["veteran"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "any_of"
+
+[[boss.timer.trigger.conditions]]
+type = "counter_reaches"
+counter_id = "ip_cpt_big_bombs"
+value = 8
+
+[[boss.timer.trigger.conditions]]
+type = "counter_reaches"
+counter_id = "ip_cpt_big_bombs"
+value = 16
+
+[[boss.timer]]
+id = "ip_cpt_exit_not_safe"
+name = "Exit not safe"
+duration_secs = 8.5
+color = [255, 128, 0, 255]
+icon_ability_id = 4471271408533778
+difficulties = ["veteran"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "counter_reaches"
+counter_id = "ip_cpt_big_bombs"
+value = 10
+
+[[boss.timer]]
+id = "ip_cpt_entrance_not_safe"
+name = "Entrance not safe"
+duration_secs = 8.5
+color = [255, 128, 0, 255]
+icon_ability_id = 4471271408533778
+difficulties = ["veteran"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "counter_reaches"
+counter_id = "ip_cpt_big_bombs"
+value = 20
+
+[[boss.timer]]
+id = "ip_cpt_at_4_stacks"
+name = "At 4 stacks"
+duration_secs = 30.0
+is_alert = true
+alert_text = "At 4 stacks!"
+color = [255, 0, 136, 255]
+icon_ability_id = 4472005847941376
+difficulties = ["veteran"]
+
+[boss.timer.trigger]
+type = "counter_reaches"
+counter_id = "ip_cpt_stacks"
+value = 4
+
+[[boss.timer]]
+id = "ip_cpt_1st_intrusion_units"
+name = "1st Intrusion Units"
+display_text = "Intrusion Units"
+duration_secs = 68.0
+color = [0, 238, 255, 255]
+icon_ability_id = 4470747422523392
+difficulties = ["story", "veteran"]
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "counter_reaches"
+counter_id = "ip_cpt_big_bombs"
+value = 1
+
+[[boss.timer]]
+id = "ip_cpt_1st_droids"
+name = "1st Droids"
+display_text = "Droids"
+duration_secs = 16
+color = [0, 100, 255, 255]
+icon_ability_id = 4480204940509454
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "ip_cpt_1st_intrusion_units"
+
+[[boss.timer]]
+id = "ip_cpt_2nd_intrusion_units"
+name = "2nd Intrusion Units"
+display_text = "Intrusion Units"
+duration_secs = 45.0
+color = [0, 238, 255, 255]
+icon_ability_id = 4470747422523392
+difficulties = ["story", "veteran"]
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "ip_cpt_1st_intrusion_units"
+
+[[boss.timer]]
+id = "ip_cpt_3rd_intrusion_units"
+name = "3rd Intrusion Units"
+display_text = "Intrusion Units"
+duration_secs = 101.5
+color = [0, 238, 255, 255]
+icon_ability_id = 4470747422523392
+difficulties = ["story", "veteran"]
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "ip_cpt_2nd_intrusion_units"
+
+[[boss.timer]]
+id = "ip_cpt_4th_intrusion_units"
+name = "4th Intrusion Units"
+display_text = "Intrusion Units"
+duration_secs = 45.0
+color = [0, 238, 255, 255]
+icon_ability_id = 4470747422523392
+difficulties = ["story", "veteran"]
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "ip_cpt_3rd_intrusion_units"
+
+[[boss.timer]]
+id = "ip_cpt_2nd_droids"
+name = "2nd Droids"
+display_text = "Droids"
+duration_secs = 6.5
+color = [0, 100, 255, 255]
+icon_ability_id = 4480204940509454
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "ip_cpt_4th_intrusion_units"
+
+[[boss.timer]]
+id = "ip_cpt_bomb_explosion"
+name = "Bomb explosion"
+duration_secs = 31.0
+alert_on = "countdown"
+alert_countdown_secs = 3.0
+color = [200, 0, 0, 255]
+icon_ability_id = 4470747422523392
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "target_set"
+selector = ["Intrusion ID Unit"]
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "counter_reaches"
+counter_id = "ip_cpt_intrusion_death"
+value = 2
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "counter_reaches"
+counter_id = "ip_cpt_intrusion_death"
+value = 4
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "counter_reaches"
+counter_id = "ip_cpt_intrusion_death"
+value = 7
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "counter_reaches"
+counter_id = "ip_cpt_intrusion_death"
+value = 10
+
+[[boss.timer]]
+id = "ip_cpt_leave_consoles"
+name = "Leave consoles"
+duration_secs = 30.0
+is_alert = true
+color = [200, 0, 0, 255]
+icon_ability_id = 4470747422523392
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "any_of"
+
+[[boss.timer.trigger.conditions]]
+type = "timer_expires"
+timer_id = "ip_cpt_bomb_explosion"
+
+[[boss.timer.trigger.conditions]]
+type = "timer_canceled"
+timer_id = "ip_cpt_bomb_explosion"
+
+[[boss.timer]]
+id = "ip_cpt_boss_returning"
+name = "Boss returning"
+duration_secs = 44.5
+color = [200, 0, 255, 255]
+difficulties = ["story", "veteran"]
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "any_of"
+
+[[boss.timer.trigger.conditions]]
+type = "timer_expires"
+timer_id = "ip_cpt_2nd_intrusion_units"
+
+[[boss.timer.trigger.conditions]]
+type = "timer_expires"
+timer_id = "ip_cpt_4th_intrusion_units"
+
+[[boss.timer]]
+id = "ip_cpt_boss_returning_burn_start"
+name = "Boss returning, Burn start"
+display_text = "Burn start"
+duration_secs = 102.5
+color = [200, 0, 255, 255]
+difficulties = ["story", "veteran"]
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "ip_cpt_4th_intrusion_units"
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Watchdog
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "watchdog"
+name = "Watchdog"
+difficulties = ["story", "veteran"]
+
+[[boss.entities]]
+name = "Watchdog"
+ids = [4466177577320448, 4494700455133184]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities.hp_markers]]
+hp_percent = 13.5
+label = "Burn"
+
+[[boss.phases]]
+id = "wd_main"
+name = "Watchdog"
+start_trigger = { type = "any_of", conditions = [
+  { type = "combat_start" },
+  { type = "phase_ended", phase_id = "wd_beams" },
+] }
+
+[[boss.phases]]
+id = "wd_stalker"
+name = "Stalker Protocol"
+start_trigger = { type = "effect_applied", effects = [4472963625648128] }
+
+[[boss.phases]]
+id = "wd_burn"
+name = "Burn"
+start_trigger = { type = "ability_cast", abilities = [4474290770542592] }
+
+[[boss.phases]]
+id = "wd_beams"
+name = "Polarized Beam"
+start_trigger = { type = "ability_cast", abilities = [4471709495197696] }
+end_trigger = { type = "ability_cast", abilities = [4472216301338624] }
+
+# -- Counters
+[[boss.counters]]
+id = "watchdog_colors_going_out"
+name = "Colors going out"
+initial_value = 0
+decrement = false
+
+[boss.counters.increment_on]
+type = "ability_cast"
+abilities = [4468595643908096]
+source = "any"
+target = "any"
+
+[[boss.counters]]
+id = "wd_deguass_counter"
+name = "Degausses"
+increment_on = { type = "ability_cast", abilities = [4472216301338624] }
+
+[[boss.counters]]
+id = "wd_beam_counter"
+name = "Polarized Beam"
+increment_on = { type = "ability_cast", abilities = [4471709495197696] }
+reset_on = { type = "ability_cast", abilities = [4472216301338624] }
+
+# -- Timers
+[[boss.timer]]
+id = "watchdog_bombs_1st"
+name = "Color Bombs 1st"
+display_text = "Color Bombs"
+duration_secs = 14.0
+color = [224, 30, 29, 255]
+icon_ability_id = 4468595643908096
+difficulties = ["veteran"]
+
+[boss.timer.trigger]
+type = "combat_start"
+
+[[boss.timer]]
+id = "watchdog_wd_protocol_cs"
+name = "WD Protocol 1st"
+display_text = "Watchdog Protocol"
+trigger = { type = "combat_start" }
+duration_secs = 28.0
+color = [180, 29, 224, 255]
+icon_ability_id = 4474376669888512
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "watchdog_wd_protocol_swap"
+name = "WD Protocol Swap"
+trigger = { type = "ability_cast", abilities = [4472272135913472] }
+duration_secs = 15.0
+color = [180, 29, 224, 255]
+icon_ability_id = 4474376669888512
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "watchdog_wd_protocol_end"
+name = "WD Protocol END"
+trigger = { type = "timer_expires", timer_id = "watchdog_wd_protocol_swap" }
+duration_secs = 12.0
+color = [180, 29, 224, 255]
+icon_ability_id = 4474376669888512
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "watchdog_degauss_1st"
+name = "Degauss 1st"
+display_text = "Degauss"
+trigger = { type = "combat_start" }
+duration_secs = 63.0
+alert_on = "countdown"
+alert_text = "Degauss"
+alert_countdown_secs = 3.0
+color = [29, 224, 218, 255]
+icon_ability_id = 4472216301338624
+difficulties = ["veteran"]
+show_at_secs = 10.0
+
+[[boss.timer]]
+id = "watchdog_stalker_protocol"
+name = "Stalker Protocol"
+trigger = { type = "any_of", conditions = [
+  { type = "counter_reaches", counter_id = "wd_deguass_counter", value = 1 },
+  { type = "counter_reaches", counter_id = "wd_deguass_counter", value = 3 },
+] }
+duration_secs = 7.0
+color = [135, 163, 66, 255]
+icon_ability_id = 4472963625648128
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "watchdog_invert"
+name = "Invert"
+trigger = { type = "ability_cast", abilities = [4472963625648128] }
+duration_secs = 19.0
+color = [135, 163, 66, 255]
+icon_ability_id = 4473247093489664
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "watchdog_stalker_ending"
+name = "Stalker ending"
+duration_secs = 15.0
+color = [135, 163, 66, 255]
+icon_ability_id = 4472963625648128
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "watchdog_invert"
+
+[[boss.timer]]
+id = "watchdog_avoid_circles"
+name = "Avoid circles"
+duration_secs = 34.0
+color = [200, 0, 0, 255]
+icon_ability_id = 4468587053973504
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "watchdog_stalker_protocol"
+
+[[boss.timer]]
+id = "watchdog_bombs_2nd"
+name = "Color Bombs 2nd"
+display_text = "Color Bombs"
+duration_secs = 18.0
+color = [224, 30, 29, 255]
+icon_ability_id = 4468595643908096
+difficulties = ["veteran"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4473247093489664]
+source = "any"
+target = "any"
+
+[[boss.timer]]
+id = "watchdog_bombs_3rd"
+name = "Color Bombs 3rd"
+display_text = "Color Bombs"
+duration_secs = 9.5
+color = [219, 28, 29, 255]
+icon_ability_id = 4468595643908096
+difficulties = ["veteran"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4472216301338624]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "counter_compare"
+counter_id = "wd_deguass_counter"
+operator = "eq"
+value = 2
+
+[[boss.timer]]
+id = "watchdog_degauss"
+name = "Degauss"
+display_text = "Degauss"
+alert_on = "countdown"
+alert_text = "Degauss"
+alert_countdown_secs = 3.0
+trigger = { type = "counter_reaches", counter_id = "wd_beam_counter", value = 4 }
+duration_secs = 10.0
+color = [29, 221, 224, 255]
+icon_ability_id = 4472216301338624
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "watchdog_1st_beam"
+name = "1st Beam"
+display_text = "Beam"
+duration_secs = 11.5
+color = [255, 128, 0, 255]
+icon_ability_id = 4471709495197696
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4468595643908096]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "counter_compare"
+counter_id = "watchdog_colors_going_out"
+operator = "gt"
+value = 1
+
+[boss.timer.cancel_trigger]
+type = "effect_applied"
+effects = [4511772950134784]
+source = "boss"
+target = "any"
+
+[[boss.timer]]
+id = "watchdog_missiles_pb"
+name = "Missiles + Beam"
+trigger = { type = "ability_cast", abilities = [4471709495197696] }
+duration_secs = 14.0
+color = [224, 129, 29, 255]
+icon_ability_id = 4471709495197696
+difficulties = ["veteran"]
+
+[[boss.timer.conditions]]
+type = "counter_compare"
+counter_id = "wd_beam_counter"
+operator = "lt"
+value = 4
+
+[[boss.timer]]
+id = "watchdog_burn_soon"
+name = "Burn soon"
+duration_secs = 30.0
+is_alert = true
+alert_text = "Burn soon"
+color = [255, 128, 0, 255]
+difficulties = ["veteran"]
+
+[boss.timer.trigger]
+type = "boss_hp_below"
+hp_percent = 18.0
+selector = ["Watchdog"]
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Lord Kanoth
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "kanoth"
+name = "Lord Kanoth"
+area_name = "R4"
+area_id = 833571547775799
+area_type = "operation"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Kanoth"
+ids = [4494876548792320, 4466190462222336]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities.hp_markers]]
+hp_percent = 72.5
+label = "Phase 2"
+
+[[boss.entities.hp_markers]]
+hp_percent = 48.7
+label = "Phase 3"
+
+[[boss.entities.hp_markers]]
+hp_percent = 17.0
+label = "Burn"
+
+[[boss.entities.shields]]
+label = "Surging Growth"
+start_trigger = { type = "effect_applied", effects = [4601859889168384] }
+end_trigger = { type = "effect_removed", effects = [4601859889168384] }
+
+[[boss.entities.shields.hp]]
+total = 1316090
+
+[[boss.phases]]
+id = "kanoth_p1"
+name = "Phase 1"
+enabled = true
+
+[boss.phases.start_trigger]
+type = "combat_start"
+
+[[boss.phases]]
+id = "kanoth_p2"
+name = "Phase 2 (opener)"
+enabled = true
+
+[boss.phases.start_trigger]
+type = "boss_hp_below"
+hp_percent = 72.5
+selector = ["Kanoth"]
+
+[[boss.phases]]
+id = "kanoth_p3"
+name = "Phase 3 (Apparitions)"
+enabled = true
+
+[boss.phases.start_trigger]
+type = "any_of"
+
+[[boss.phases.start_trigger.conditions]]
+type = "boss_hp_below"
+hp_percent = 48.7
+selector = ["Kanoth"]
+
+[[boss.phases.start_trigger.conditions]]
+type = "ability_cast"
+abilities = [4602418234916864]
+source = "any"
+target = "any"
+
+[[boss.phases]]
+id = "kanoth_p4"
+name = "Phase 4 (pre burn intermission)"
+enabled = true
+
+[boss.phases.start_trigger]
+type = "effect_applied"
+effects = [4602461184589824]
+source = "any"
+target = "any"
+
+[[boss.phases]]
+id = "kanoth_p5"
+name = "Phase 5 (burn)"
+enabled = true
+
+[boss.phases.start_trigger]
+type = "effect_removed"
+effects = [4602461184589824]
+source = "any"
+target = "any"
+
+[[boss.phases]]
+id = "kanoth_p2_1"
+name = "Phase 2"
+enabled = true
+
+[boss.phases.start_trigger]
+type = "effect_removed"
+effects = [4601829824397312]
+source = "any"
+target = "any"
+
+[[boss.phases]]
+id = "kanoth_p3_1"
+name = "Phase 3"
+enabled = true
+
+[boss.phases.start_trigger]
+type = "timer_expires"
+timer_id = "kanoth_p3"
+
+[[boss.challenges]]
+id = "kanoth_grenades_thrown"
+name = "Grenades thrown"
+metric = "ability_count"
+columns = "total_only"
+
+[[boss.challenges.conditions]]
+type = "ability"
+ability_ids = [4482674546704384]
+
+[[boss.counters]]
+id = "kanoth_p3_f_b"
+name = "Fortify Ground Blocker"
+enabled = true
+initial_value = 0
+decrement = false
+
+[boss.counters.increment_on]
+type = "timer_expires"
+timer_id = "kanoth_p3"
+
+[boss.counters.reset_on]
+type = "any_of"
+
+[[boss.counters.reset_on.conditions]]
+type = "timer_started"
+timer_id = "kanoth_gs_p3_2nd"
+
+[[boss.counters.reset_on.conditions]]
+type = "phase_entered"
+phase_id = "kanoth_p5"
+
+[[boss.counters]]
+id = "kanoth_cg_b"
+name = "Creeping Growth Blocker"
+enabled = true
+initial_value = 0
+decrement = false
+
+[boss.counters.increment_on]
+type = "ability_cast"
+abilities = [4485827052699648]
+source = "any"
+target = "any"
+
+[boss.counters.reset_on]
+type = "phase_entered"
+phase_id = "kanoth_p3"
+
+[[boss.timer]]
+id = "kanoth_gs_p1_1st"
+name = "Growth Seed"
+duration_secs = 6.0
+color = [255, 128, 0, 255]
+icon_ability_id = 4481819848212480
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p1"
+
+[[boss.timer]]
+id = "kanoth_soe_p1_1st"
+name = "Seed of Echoes"
+duration_secs = 12.0
+color = [146, 0, 214, 255]
+icon_ability_id = 4484697476300800
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p1"
+
+[[boss.timer]]
+id = "kanoth_lg_p1_1st"
+name = "Lateral Growth"
+duration_secs = 24.0
+color = [239, 241, 136, 255]
+icon_ability_id = 4483095453499392
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p1"
+
+[[boss.timer]]
+id = "kanoth_vg_p1_1st"
+name = "Vertical Growth"
+duration_secs = 32.0
+color = [251, 255, 0, 255]
+icon_ability_id = 4483121223303168
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p1"
+
+[[boss.timer]]
+id = "kanoth_dg_p1_1st"
+name = "Directional Growth"
+duration_secs = 40.0
+color = [162, 164, 30, 255]
+icon_ability_id = 4485088318324736
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p1"
+
+[[boss.timer]]
+id = "kanoth_fp_r_p1_1st"
+name = "Fire Probe + Repel"
+duration_secs = 45.0
+color = [87, 43, 0, 255]
+icon_ability_id = 4483082568597504
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p1"
+
+[[boss.timer]]
+id = "kanoth_fg"
+name = "Fortify Ground"
+duration_secs = 7.0
+color = [255, 128, 0, 255]
+icon_ability_id = 4483005259186176
+difficulties = ["story", "veteran", "master"]
+can_be_refreshed = true
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4481819848212480]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "counter_compare"
+counter_id = "kanoth_p3_f_b"
+operator = "lte"
+value = 0
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_gs"
+name = "Growth Seed"
+duration_secs = 7.0
+color = [255, 128, 0, 255]
+icon_ability_id = 4481819848212480
+difficulties = ["story", "veteran", "master"]
+can_be_refreshed = true
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4483005259186176]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_soe"
+name = "Seed of Echoes"
+duration_secs = 18.0
+color = [161, 0, 219, 255]
+icon_ability_id = 4484697476300800
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4484697476300800]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_vg"
+name = "Vertical Growth"
+duration_secs = 45.0
+color = [251, 255, 0, 255]
+icon_ability_id = 4483121223303168
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4483121223303168]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "phase_active"
+phase_ids = ["kanoth_p1"]
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_lg"
+name = "Lateral Growth"
+duration_secs = 45.0
+color = [239, 241, 136, 255]
+icon_ability_id = 4483095453499392
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4483095453499392]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "phase_active"
+phase_ids = ["kanoth_p1"]
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_dg"
+name = "Directional Growth"
+duration_secs = 46.5
+color = [162, 164, 30, 255]
+icon_ability_id = 4485088318324736
+difficulties = ["story", "veteran", "master"]
+can_be_refreshed = true
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4485088318324736]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "phase_active"
+phase_ids = ["kanoth_p1"]
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_abduct"
+name = "Abduct"
+duration_secs = 27.0
+color = [0, 219, 216, 255]
+icon_ability_id = 4483065388728320
+difficulties = ["story", "veteran", "master"]
+can_be_refreshed = true
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4483082568597504]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_repel"
+name = "Repel"
+duration_secs = 25.0
+color = [201, 64, 64, 255]
+icon_ability_id = 4483082568597504
+difficulties = ["story", "veteran", "master"]
+can_be_refreshed = true
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4483065388728320]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_started"
+timer_id = "kanoth_abduct"
+
+[[boss.timer]]
+id = "kanoth_repel_n"
+name = "Repel"
+duration_secs = 6.0
+color = [201, 64, 64, 255]
+icon_ability_id = 4483082568597504
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "kanoth_abduct"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_started"
+timer_id = "kanoth_repel"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_burn_stun"
+name = "Shield Down"
+duration_secs = 10.0
+color = [255, 0, 0, 255]
+icon_ability_id = 4602461184590088
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4602435414786048]
+source = "any"
+target = "any"
+
+[[boss.timer]]
+id = "kanoth_fp_p2_1st"
+name = "Fire Probe"
+duration_secs = 24.0
+color = [107, 54, 0, 255]
+icon_ability_id = 4602448299687936
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p2"
+
+[[boss.timer]]
+id = "kanoth_p2_rng_g"
+name = "Random Growth"
+duration_secs = 6.0
+color = [254, 245, 1, 255]
+icon_ability_id = 4483095453499392
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p2_1"
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "kanoth_p3"
+
+[[boss.timer]]
+id = "kanoth_gs_p2_1st"
+name = "Growth Seed"
+duration_secs = 12.0
+color = [255, 128, 0, 255]
+icon_ability_id = 4481819848212480
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p2_1"
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "kanoth_p3"
+
+[[boss.timer]]
+id = "kanoth_repel_p2_1st"
+name = "Repel"
+duration_secs = 30.0
+color = [201, 64, 64, 255]
+icon_ability_id = 4483082568597504
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p2_1"
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "kanoth_p3"
+
+[[boss.timer]]
+id = "kanoth_beckon_p2_1st"
+name = "Monstrosity + SoE"
+duration_secs = 45.0
+color = [0, 173, 12, 255]
+icon_ability_id = 4602615803412480
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p2_1"
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "kanoth_p3"
+
+[[boss.timer]]
+id = "kanoth_beckon"
+name = "Monstrosity"
+duration_secs = 63.0
+color = [0, 173, 12, 255]
+icon_ability_id = 4602615803412480
+difficulties = ["story", "veteran", "master"]
+can_be_refreshed = true
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4601305838387200]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "phase_active"
+phase_ids = ["kanoth_p2_1"]
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_dg_p2"
+name = "Directional Growth"
+duration_secs = 18.0
+color = [254, 245, 1, 255]
+icon_ability_id = 4485088318324736
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4483121223303168, 4483095453499392]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "phase_active"
+phase_ids = ["kanoth_p2_1"]
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_lg_vg_p2"
+name = "Random Growth"
+duration_secs = 18.0
+color = [254, 245, 1, 255]
+icon_ability_id = 4483095453499392
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4485088318324736]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "phase_active"
+phase_ids = ["kanoth_p2_1"]
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_p3"
+name = "Kanoth Reveals"
+duration_secs = 16.0
+color = [245, 0, 0, 255]
+icon_ability_id = 813445331025920
+difficulties = ["story", "veteran", "master"]
+can_be_refreshed = true
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4498608875372544]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "kanoth_p_s"
+
+[[boss.timer]]
+id = "kanoth_soe_p3_1st"
+name = "Seed of Echoes"
+duration_secs = 9.0
+color = [161, 0, 219, 255]
+icon_ability_id = 4484697476300800
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p3_1"
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "kanoth_p4"
+
+[[boss.timer]]
+id = "kanoth_cg_p3_1st"
+name = "Creeping Growth"
+duration_secs = 15.0
+color = [0, 17, 255, 255]
+icon_ability_id = 4485827052699648
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p3_1"
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "kanoth_p4"
+
+[[boss.timer]]
+id = "kanoth_gs_p3_2nd"
+name = "Growth Seed"
+duration_secs = 13.0
+color = [255, 128, 0, 255]
+icon_ability_id = 4481819848212480
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4481819848212480]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "counter_compare"
+counter_id = "kanoth_p3_f_b"
+operator = "gt"
+value = 0
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "kanoth_p4"
+
+[[boss.timer]]
+id = "kanoth_repel_p3_1st"
+name = "Repel"
+duration_secs = 24.0
+color = [201, 64, 64, 255]
+icon_ability_id = 4483082568597504
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p3_1"
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "kanoth_p4"
+
+[[boss.timer]]
+id = "kanoth_beckon_p3"
+name = "Monstrosity"
+duration_secs = 67.0
+color = [0, 173, 12, 255]
+icon_ability_id = 4602615803412480
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p3_1"
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "kanoth_p4"
+
+[[boss.timer]]
+id = "kanoth_apparitions"
+name = "Apparitions"
+duration_secs = 90.0
+color = [255, 0, 0, 255]
+icon_ability_id = 4498608875372544
+difficulties = ["story", "veteran", "master"]
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p3_1"
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "kanoth_p4"
+
+[[boss.timer]]
+id = "kanoth_gs_b_1st"
+name = "Growth Seed "
+duration_secs = 8.0
+color = [255, 128, 0, 255]
+icon_ability_id = 4481819848212480
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "kanoth_p5"
+
+[[boss.timer]]
+id = "kanoth_p_s"
+name = "Phase Swap"
+duration_secs = 30.0
+is_alert = true
+color = [255, 0, 0, 255]
+difficulties = ["story", "veteran", "master"]
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "any_of"
+
+[[boss.timer.trigger.conditions]]
+type = "phase_entered"
+phase_id = "kanoth_p2"
+
+[[boss.timer.trigger.conditions]]
+type = "phase_entered"
+phase_id = "kanoth_p3"
+
+[[boss.timer.trigger.conditions]]
+type = "phase_entered"
+phase_id = "kanoth_p4"
+
+[[boss.timer.trigger.conditions]]
+type = "phase_entered"
+phase_id = "kanoth_p5"
+
+[[boss.timer.trigger.conditions]]
+type = "phase_entered"
+phase_id = "kanoth_p2_1"
+
+[[boss.timer.trigger.conditions]]
+type = "phase_entered"
+phase_id = "kanoth_p3_1"
+
+[[boss.timer]]
+id = "kanoth_p3_cg"
+name = "Creeping Growth"
+duration_secs = 28.5
+color = [0, 17, 255, 255]
+icon_ability_id = 4485827052699648
+difficulties = ["story", "veteran", "master"]
+can_be_refreshed = true
+show_at_secs = 15.0
+roles = ["Tank", "Healer", "Dps"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4485827052699648]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "counter_compare"
+counter_id = "kanoth_cg_b"
+operator = "lte"
+value = 1
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "kanoth_p4"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Add Encounter: Hallway
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "hallway"
+name = "Hallway"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Attractor"
+ids = [4628720614637568]
+is_boss = false
+triggers_encounter = true
+is_kill_target = false
+show_on_hp_overlay = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 4: Lady Dominique
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "dominique"
+name = "Lady Dominique"
+difficulties = ["story", "veteran"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Lady Dominique"
+ids = [4608014577303552, 4466199052156928]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities.hp_markers]]
+hp_percent = 40.0
+label = "P2 Shield"
+
+[[boss.entities.hp_markers]]
+hp_percent = 25.0
+label = "Shield Attractors"
+
+[[boss.entities.hp_markers]]
+hp_percent = 15.0
+label = "Final Burn"
+
+[[boss.entities.shields]]
+label = "Insulate"
+start_trigger = { type = "effect_applied", effects = [4590800348381184] }
+end_trigger = { type = "effect_removed", effects = [4590800348381184] }
+
+[[boss.entities.shields.hp]]
+total = 600000
+
+[[boss.entities]]
+name = "Watchdog"
+ids = [4488524292161536]
+is_boss = true
+pushes_at = 0.1
+
+[[boss.entities]]
+name = "Attractors"
+ids = [4598389555593216, 4598393850560512]
+
+[[boss.phases]]
+id = "dominique_aria"
+name = "Aria"
+
+[boss.phases.start_trigger]
+type = "combat_start"
+
+[[boss.phases]]
+id = "dominique_dom_generators"
+name = "Dom Generators"
+
+[boss.phases.start_trigger]
+type = "ability_cast"
+abilities = [4598093202849792]
+source = "boss"
+target = "any"
+
+[[boss.phases]]
+id = "dominique_watchdog"
+name = "Watchdog"
+
+[boss.phases.start_trigger]
+type = "npc_appears"
+selector = ["Watchdog"]
+
+[[boss.phases]]
+id = "dominique_dom_attractors"
+name = "Dom+Attractors"
+display_text = "Dom+Attractors"
+start_trigger = { type = "any_of", conditions = [
+  { type = "boss_hp_below", hp_percent = 1.0, selector = [
+    "Watchdog",
+  ] },
+  { type = "npc_appears", selector = [
+    "Attractors",
+  ] },
+] }
+conditions = [
+  { type = "counter_compare", counter_id = "dom_attractor_appearance", operator = "lt", value = 2 },
+]
+
+[[boss.phases]]
+id = "dominique_burn"
+name = "Burn"
+display_text = "Burn"
+
+[boss.phases.start_trigger]
+type = "boss_hp_below"
+hp_percent = 25.0
+selector = ["Lady Dominique"]
+
+# -- Counters
+[[boss.counters]]
+id = "dom_attractor_appearance"
+name = "Attractor Spawns"
+increment_on = { type = "npc_appears", selector = ["Attractors"] }
+
+[[boss.counters]]
+id = "dominique_p2_stacks"
+name = "p2 stacks"
+enabled = true
+initial_value = 0
+decrement = false
+
+[boss.counters.increment_on]
+type = "ability_cast"
+
+[boss.counters.track_effect_stacks]
+effects = [4606133381628162]
+target = "local_player"
+
+# -- Challenges
+[[boss.challenges]]
+id = "dominique_burn"
+name = "Burn"
+metric = "damage"
+columns = "total_percent"
+
+[[boss.challenges.conditions]]
+type = "phase"
+phase_ids = ["dominique_burn"]
+
+# -- Timers
+[[boss.timer]]
+id = "dominique_orange_circle"
+name = "Orange Circle dropping"
+is_alert = true
+duration_secs = 8.0
+alert_on = "on_apply"
+alert_text = "Orange on you"
+color = [224, 112, 0, 255]
+icon_ability_id = 4574715695857998
+difficulties = ["story", "veteran"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4574715695857998]
+source = "boss"
+target = "local_player"
+
+[[boss.timer]]
+id = "dominique_yellow_circle"
+name = "Yellow Circle knockback"
+is_alert = true
+duration_secs = 8.0
+alert_on = "on_apply"
+alert_text = "Yellow on you"
+color = [255, 234, 0, 255]
+icon_ability_id = 4574698515988786
+difficulties = ["story", "veteran"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4574698515988786]
+source = "boss"
+target = "local_player"
+
+[[boss.timer]]
+id = "dominique_aria_spawned"
+name = "ARIA spawned"
+duration_secs = 30.0
+is_alert = true
+color = [38, 162, 105, 255]
+icon_ability_id = 4594657229012992
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4594657229012992]
+source = "any"
+target = "any"
+
+[[boss.timer]]
+id = "dominique_incite"
+name = "Incite"
+duration_secs = 31.0
+color = [46, 194, 126, 255]
+icon_ability_id = 4590654319493120
+difficulties = ["story", "veteran"]
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4594657229012992]
+source = "any"
+target = "any"
+
+[[boss.timer]]
+id = "dominique_kick"
+name = "Kick"
+duration_secs = 8.0
+color = [150, 100, 200, 255]
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4590654319493120]
+source = "any"
+target = "any"
+
+[[boss.timer]]
+id = "dominique_1st_detonator_spawn"
+name = "Detonator Spawn"
+duration_secs = 20.0
+color = [229, 165, 10, 255]
+icon_ability_id = 4594992236462080
+difficulties = ["story", "veteran"]
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "dominique_dom_generators"
+
+[[boss.timer]]
+id = "dominique_next_detonator_spawn"
+name = "Detonator Spawn"
+duration_secs = 30.0
+color = [229, 165, 10, 255]
+icon_ability_id = 4594992236462080
+difficulties = ["story", "veteran"]
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4595108200579072]
+source = "boss"
+target = "boss"
+
+[boss.timer.cancel_trigger]
+type = "phase_ended"
+phase_id = "dominique_dom_generators"
+
+[[boss.timer]]
+id = "dominique_tank_swap"
+name = "Tank swap"
+is_alert = true
+color = [150, 0, 255, 255]
+icon_ability_id = 4606133381628162
+difficulties = ["veteran"]
+
+[boss.timer.trigger]
+type = "counter_reaches"
+counter_id = "dominique_p2_stacks"
+value = 5
+
+[[boss.timer]]
+id = "dominique_watchdog_appears"
+name = "Watchdog appears"
+duration_secs = 30.0
+is_alert = true
+color = [200, 0, 255, 255]
+difficulties = ["veteran"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "dominique_watchdog"
+
+[[boss.timer]]
+id = "dominique_wd_colors"
+name = "Wd colors"
+duration_secs = 22.0
+color = [200, 0, 255, 255]
+icon_ability_id = 4597371648344064
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "dominique_watchdog"
+
+[[boss.timer]]
+id = "dominique_wd_beam"
+name = "Wd beam"
+duration_secs = 10.0
+color = [200, 0, 255, 255]
+icon_ability_id = 4596912086843392
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4471486156898304]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "phase_entered"
+phase_id = "dominique_dom_attractors"
+
+[[boss.timer]]
+id = "dominique_1st_recursive"
+name = "1st Recursive"
+display_text = "Recursive"
+duration_secs = 6.0
+color = [255, 128, 0, 255]
+icon_ability_id = 4603328767983616
+difficulties = ["veteran"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4598754627813376]
+source = "any"
+target = "any"
+
+[[boss.timer]]
+id = "dominique_recursives"
+name = "Recursives"
+duration_secs = 30.0
+color = [255, 128, 0, 255]
+icon_ability_id = 4603328767983616
+difficulties = ["story", "veteran"]
+can_be_refreshed = true
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "any_of"
+
+[[boss.timer.trigger.conditions]]
+type = "effect_applied"
+effects = [4603328767983616]
+source = "any"
+target = "any"
+
+[[boss.timer.trigger.conditions]]
+type = "effect_applied"
+effects = [4599643686043648]
+source = "boss"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "ability_cast"
+abilities = [4606249345744896, 4606253640712192]
+source = "any"
+target = "any"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "effect_applied"
+effects = [4599643686043648]
+source = "any"
+target = "any"
+
+[[boss.timer]]
+id = "dominique_rec_after_2nd_unify"
+name = "Rec after 2nd unitfy"
+display_text = "Recursive"
+duration_secs = 16.0
+color = [255, 128, 0, 255]
+icon_ability_id = 4603328767983616
+difficulties = ["veteran", "story"]
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4606249345744896]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "dominique_recursives"
+
+[[boss.timer]]
+id = "dominique_rec_after_3rd_unify"
+name = "Rec after 3rd unify"
+display_text = "Recursive"
+duration_secs = 14.0
+color = [255, 128, 0, 255]
+icon_ability_id = 4603328767983616
+difficulties = ["veteran", "story"]
+show_at_secs = 10.0
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4606253640712192]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "timer_started"
+timer_id = "dominique_recursives"
+
+[[boss.timer]]
+id = "dominique_burn_start"
+name = "Burn Start"
+duration_secs = 30.0
+is_alert = true
+alert_text = "BURN"
+color = [165, 29, 45, 255]
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "phase_entered"
+phase_id = "dominique_burn"
+
+[[boss.timer]]
+id = "dominique_1st_monstrosities"
+name = "1st Monstrosities"
+display_text = "Monstrosities"
+duration_secs = 48.0
+color = [200, 0, 0, 255]
+icon_ability_id = 4479436141363471
+difficulties = ["veteran"]
+show_at_secs = 15.0
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4605540676141056]
+source = "any"
+target = "any"
+
+[[boss.timer]]
+id = "dominique_monstrosities"
+name = "Monstrosities"
+duration_secs = 40.0
+color = [200, 0, 0, 255]
+icon_ability_id = 4479436141363471
+difficulties = ["veteran"]
+show_at_secs = 15.0
+
+[boss.timer.trigger]
+type = "any_of"
+
+[[boss.timer.trigger.conditions]]
+type = "timer_expires"
+timer_id = "dominique_1st_monstrosities"
+
+[[boss.timer.trigger.conditions]]
+type = "timer_expires"
+timer_id = "dominique_monstrosities"
+
+[[boss.timer]]
+id = "dominique_targeted_by_reaper"
+name = "Repear Targets Local Player"
+display_text = "Repear on You!"
+duration_secs = 30.0
+is_alert = true
+color = [0, 255, 238, 255]
+difficulties = ["story", "veteran"]
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4594975056592896]
+source = "any"
+target = "any"

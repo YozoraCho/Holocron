@@ -1,0 +1,80 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# The Esseles - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 4 bosses, 1 bonus boss
+
+[area]
+name = "The Esseles"
+area_id = 833571547775678
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Lieutenant Isric
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "lieutenant_isric"
+name = "Lieutenant Isric"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Lieutenant Isric"
+ids = [2510773456732160, 649467774631936]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Ironfist
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "ironfist"
+name = "Ironfist"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Ironfist"
+ids = [649484954501120, 2510769161764864]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: ISS-7 Guardian Battledroid
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "iss_7_guardian_battledroid"
+name = "ISS-7 Guardian Battledroid"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "ISS-7 Guardian Battledroid"
+ids = [653359015002112, 2510777751699456]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 4: Vokk
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "vokk"
+name = "Vokk"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Vokk"
+ids = [649472069599232, 2510790636601344]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bonus Boss: ISS-994 Power Droid
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "iss_994_power_droid"
+name = "ISS-994 Power Droid"
+difficulties = ["master"]
+
+[[boss.entities]]
+name = "ISS-994 Power Droid"
+ids = [1461006140178432]
+is_kill_target = true
+is_boss = true

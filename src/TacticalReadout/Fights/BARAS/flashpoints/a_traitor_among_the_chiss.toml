@@ -1,0 +1,80 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# A Traitor Among The Chiss - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3 bosses, 1 bonus boss, 1 optional boss
+
+[area]
+name = "A Traitor Among The Chiss"
+area_id = 833571547775777
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Guardian Droid
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "guardian_droid"
+name = "Guardian Droid"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Guardian Droid"
+ids = [4128382694457344]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Syndic Zenta
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "syndic_zenta"
+name = "Syndic Zenta"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Syndic Zenta"
+ids = [4135314771673088]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Valss
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "valss"
+name = "Valss"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Valss"
+ids = [4132209510318080]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bonus Boss: Strike Team Walker
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "strike_team_walker"
+name = "Strike Team Walker"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Strike Team Walker"
+ids = [4137311931465728]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Optional Boss: Temple Guardian
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "temple_cat"
+name = "Temple Guardian"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Temple Cat"
+ids = [4129460731248640]
+is_boss = true
+is_kill_target = true

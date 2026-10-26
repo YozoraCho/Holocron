@@ -1,0 +1,74 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Ruins of Nul - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3 bosses, 1 bonus boss
+
+[area]
+name = "Ruins of Nul"
+area_id = 833571547775798
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Apex Ranphyx
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "apex_ranphyx"
+name = "Apex Ranphyx"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Apex Ranphyx"
+ids = [4468097427701760]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Regnant
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "regnant"
+name = "Regnant"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Regnant"
+ids = [4469132514820096]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Darth Malgus
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "nul_darth_malgus"
+name = "Darth Malgus"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Darth Malgus"
+ids = [4468509744562176]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bonus Boss: Warden Units
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "warden_units"
+name = "Warden Units"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "AG-99 Warden Unit"
+ids = [4563939622912000]
+is_boss = true
+
+[[boss.entities]]
+name = "PR-33 Warden Unit"
+ids = [4563943917879296]
+is_boss = true
+
+[[boss.entities]]
+name = "ND-66 Warden Unit"
+ids = [4563948212846592]
+is_boss = true

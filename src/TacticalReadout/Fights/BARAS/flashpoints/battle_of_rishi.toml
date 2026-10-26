@@ -1,0 +1,78 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Battle of Rishi - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3 bosses, 1 bonus boss
+
+[area]
+name = "Battle of Rishi"
+area_id = 833571547775720
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Rarrook & Marko Ka
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "rarrook_marko"
+name = "Rarrook & Marko Ka"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Rarrook"
+ids = [3369139850706944, 3533559788732416]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities]]
+name = "Marko Ka"
+ids = [3369144145674240, 3533564083699712]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Master Obai & Lord Vodd
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "obai_vodd"
+name = "Master Obai & Lord Vodd"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Master Obai"
+ids = [3369148440641536, 3533581263568896]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities]]
+name = "Lord Vodd"
+ids = [3369152735608832, 3533585558536192]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Shield Squadron Unit 1
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "shield_walker"
+name = "Shield Squadron Unit 1"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Shield Squadron Unit 1"
+ids = [3369157030576128, 3533594148470784]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bonus Boss: Commander Mokan
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "mokan"
+name = "Commander Mokan"
+difficulties = ["master"]
+
+[[boss.entities]]
+name = "Commander Mokan"
+ids = [3417131815272448]
+is_boss = true
+is_kill_target = true

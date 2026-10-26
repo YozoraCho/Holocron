@@ -1,0 +1,52 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# The Red Reaper - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3 bosses
+
+[area]
+name = "The Red Reaper"
+area_id = 833571547775686
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Lord Kherus
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "lord_kherus"
+name = "Lord Kherus"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Lord Kherus"
+ids = [2482594176303104]
+is_kill_target = true
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: SV-3 Eradicator
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "sv_3_eradicator"
+name = "SV-3 Eradicator"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "SV-3 Eradicator"
+ids = [2482692960550912]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Darth Ikoral
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "darth_ikoral"
+name = "Darth Ikoral"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Darth Ikoral"
+ids = [1478800189685760]
+is_kill_target = true
+is_boss = true

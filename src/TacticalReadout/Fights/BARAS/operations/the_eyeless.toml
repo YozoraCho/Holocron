@@ -1,0 +1,39 @@
+[area]
+name = "Rakghoul Tunnels"
+id = 137438993429
+
+[[boss]]
+id = "eyeless"
+name = "The Eyeless"
+difficulties = ["story", "veteran"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "The Eyeless"
+ids = [3328380611067904, 3328372021133312, 3319090596806656, 3328376316100608]
+is_boss = true
+is_kill_target = true
+
+[[boss.phases]]
+id = "eyeless_kite"
+name = "The Eyeless"
+start_trigger = { type = "combat_start" }
+
+[[boss.timer]]
+id = "eyeless_crush_1st"
+name = "Crush 1st"
+display_text = "Crush"
+duration_secs = 15.0
+trigger = { type = "combat_start" }
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "eyeless_crush"
+name = "Crush"
+duration_secs = 35.0
+trigger = { type = "ability_cast", abilities = [
+  3328277531852800,
+], source = { selector = [
+  "The Eyeless",
+] } }
+difficulties = ["veteran"]

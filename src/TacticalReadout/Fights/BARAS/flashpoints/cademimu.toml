@@ -1,0 +1,72 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Cademimu - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3 bosses, 1 bonus boss
+
+[area]
+name = "Cademimu"
+area_id = 833571547775684
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Officer Xander and EN-4C
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "officer_xander_en4c"
+name = "Officer Xander and EN-4C"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Officer Xander"
+ids = [3210672737353728, 2504232221540352]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities]]
+name = "EN-4C"
+ids = [3210668442386432, 2504236516507648]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Captain Grimyk
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "captain_grimyk"
+name = "Captain Grimyk"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Captain Grimyk"
+ids = [2503961638600704, 3210677032321024]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: General Ortol
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "general_ortol"
+name = "General Ortol"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "General Ortol"
+ids = [2506547208912896, 3210659852451840]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bonus Boss: Garold the Dark One
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "garold_the_dark_one"
+name = "Garold the Dark One"
+difficulties = ["master"]
+
+[[boss.entities]]
+name = "Garold the Dark One"
+ids = [3247463427211264]
+is_kill_target = true
+is_boss = true

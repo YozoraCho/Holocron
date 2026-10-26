@@ -1,0 +1,134 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Objective Meridian - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# Onslaught expansion flashpoint on Corellia. 3 bosses, 1 bonus boss
+
+[area]
+name = "Objective Meridian"
+area_id = 833571547775793
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Republic Boss 1: Vulture Squad Armored Units 14 and 02
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "vulture_squad"
+name = "Vulture Squad"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Vulture Squad Unit 02"
+ids = [4257498001309696]
+is_boss = true
+
+[[boss.entities]]
+name = "Vulture Squad Unit 13"
+ids = [4275957770747904, 4275957770747904]
+is_boss = true
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Republic Boss 2: Commander Aster
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "commander_aster"
+name = "Commander Aster"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Commander Aster"
+ids = [4258021987319808, 4363188556529664]
+is_boss = true
+is_kill_target = true
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Republic Boss 3: Darth Malgus
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "darth_malgus"
+name = "Darth Malgus"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Darth Malgus"
+ids = [4257502296276992]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Republic Bonus Boss: Lord Feng and Darth Yun
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "feng_yun"
+name = "Lord Feng & Darth Yun"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Darth Yun"
+ids = [4363179966595072, 4257506591244288]
+is_boss = true
+
+[[boss.entities]]
+name = "Lord Feng"
+ids = [4276941318258688]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Imperial Boss 1: R10-X6 Droid (Spider Tank)
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "r10-x6"
+name = "R10-X6 Droid"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "R10-X6 Droid"
+ids = [4363141311889408, 4257467936538624]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Imperial Boss 2: Master Jakir Halcyon and Seldin
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "jakir_and_seldin"
+name = "Master Halcyon & Seldin"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Master Jakir Halcyon"
+ids = [4257442166734848, 4363167081693184]
+is_boss = true
+
+[[boss.entities]]
+name = "Seldin"
+ids = [4257455051636736, 4363171376660480]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Imperial Boss 3: Tau Idair
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "tau_idair"
+name = "Tau Idair"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Tau Idair"
+ids = [4257463641571328, 4363175671627776]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Imperial Bonus Boss: Commander Rasha
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "rasha"
+name = "Commander Rasha"
+difficulties = ["master"]
+
+[[boss.entities]]
+name = "Commander Rasha"
+ids = [4258185196077056]
+is_kill_target = true
+is_boss = true

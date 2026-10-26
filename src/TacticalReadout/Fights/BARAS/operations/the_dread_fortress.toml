@@ -1,0 +1,1027 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# The Dread Fortress - Operation
+# ═══════════════════════════════════════════════════════════════════════════════
+# Dread Fortress - 5 boss operation (Nefra, Draxus, Grob'thok, Corruptor Zero, Brontes)
+# Source: ORBS timer data + manual verification from NiM logs
+
+[area]
+name = "The Dread Fortress"
+id = 137438993402
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Nefra, Who Bars the Way
+# ═══════════════════════════════════════════════════════════════════════════════
+# Simple boss with periodic raid damage and add spawns.
+# Key mechanics:
+# - Voice of the Masters: Raid-wide damage that must be healed through
+# - DPS/Tank Adds: Spawned periodically, must be killed quickly
+# - Twin Attack: Main rotation ability (used for NiM cleave tracking)
+# - Nightmare Twin Attack: Special cleave mechanic in NiM
+
+[[boss]]
+id = "nefra"
+name = "Nefra, Who Bars the Way"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Nefra, Who Bars the Way"
+ids = [3266533082005504, 3303036009054208, 3303031714086912, 3303040304021504]
+is_boss = true
+is_kill_target = true
+
+# ─── Counters ───────────────────────────────────────────────────────────────────
+# NiM uses Twin Attack count to determine when adds/cleave happen
+
+[[boss.counters]]
+id = "nefra_twin_attack_count"
+name = "Twin Attacks"
+increment_on = { type = "ability_cast", abilities = [3342034312101888] }
+reset_on = { type = "ability_cast", abilities = [
+  3342167456088064,
+] } # Reset on Nightmare Twin Attack
+
+[[boss.counters]]
+id = "nefra_rng_add_gate"
+name = "rng_add_gate"
+decrement_on = { type = "any_of", conditions = [
+  { type = "timer_started", timer_id = "nefra_dps_add" },
+  { type = "timer_started", timer_id = "nefra_tank_add" },
+] }
+increment_on = { type = "timer_expires", timer_id = "nefra_rng_add" }
+initial_value = 0
+
+[[boss.counters]]
+id = "nefra_curse_stacks_local"
+name = "Curse Stacks - Local"
+enabled = true
+initial_value = 0
+decrement = false
+
+[boss.counters.track_effect_stacks]
+effects = [3342034312102196]
+target = "local_player"
+aggregation = "max"
+
+[boss.counters.increment_on]
+type = "ability_cast"
+abilities = []
+source = "any"
+target = "any"
+
+[boss.counters.reset_on]
+type = "combat_end"
+
+[[boss.counters]]
+id = "nefra_twin_stacks"
+name = "Twin stacks"
+
+[boss.counters.increment_on]
+type = "ability_cast"
+
+[boss.counters.track_effect_stacks]
+effects = [3342034312102187]
+target = "boss"
+
+# ─── Timers ─────────────────────────────────────────────────────────────────────
+
+[[boss.timer]]
+id = "nefra_voice_cs"
+name = "Voice"
+trigger = { type = "combat_start" }
+icon_ability_id = 3270007710548233
+duration_secs = 15.0
+color = [29, 153, 20, 255]
+difficulties = ["veteran", "master"]
+chains_to = "nefra_voice"
+
+[[boss.timer]]
+id = "nefra_voice"
+name = "Voice"
+trigger = { type = "ability_cast", abilities = [3270007710547968] }
+icon_ability_id = 3270007710548233
+duration_secs = 30.0
+color = [29, 153, 20, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "nefra_local_taunt"
+name = "Local Taunt"
+is_alert = true
+alert_text = "3 Stacks - Taunt!"
+color = [150, 0, 0, 255]
+icon_ability_id = 3342034312102196
+difficulties = ["master"]
+
+[boss.timer.trigger]
+type = "counter_reaches"
+counter_id = "nefra_curse_stacks_local"
+value = 3
+
+[[boss.timer]]
+id = "nefra_dps_add_1st"
+name = "DPS Add 1st"
+display_text = "DPS Add"
+trigger = { type = "combat_start" }
+duration_secs = 30.0
+color = [37, 219, 213, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "nefra_tank_add_1st"
+name = "TANK Add 1st"
+display_text = "Tank Add"
+trigger = { type = "combat_start" }
+duration_secs = 45.0
+color = [52, 28, 219, 255]
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "nefra_dps_add_vm"
+name = "DPS Add VM"
+display_text = "DPS Add"
+trigger = { type = "ability_cast", abilities = [3308460552749056] }
+duration_secs = 30.0
+color = [32, 211, 219, 255]
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "nefra_tank_add_vm"
+name = "TANK Add VM"
+display_text = "Tank Add"
+trigger = { type = "ability_cast", abilities = [3308164200005632] }
+duration_secs = 30.0
+color = [46, 32, 219, 255]
+difficulties = ["veteran"]
+
+[[boss.timer]]
+id = "nefra_tank_add"
+name = "TANK Add NiM"
+display_text = "Tank Add"
+trigger = { type = "ability_cast", abilities = [3308460552749056] }
+duration_secs = 10.0
+color = [33, 29, 224, 255]
+difficulties = ["master"]
+conditions = [
+  { type = "counter_compare", counter_id = "nefra_rng_add_gate", operator = "eq", value = 1 },
+]
+
+[[boss.timer]]
+id = "nefra_dps_add"
+name = "DPS Add NiM"
+display_text = "Tank Add"
+trigger = { type = "ability_cast", abilities = [3308164200005632] }
+duration_secs = 10.0
+color = [32, 219, 213, 255]
+difficulties = ["master"]
+conditions = [
+  { type = "counter_compare", counter_id = "nefra_rng_add_gate", operator = "eq", value = 1 },
+]
+
+[[boss.timer]]
+id = "nefra_rng_add"
+name = "RNG Add"
+trigger = { type = "ability_cast", abilities = [3342034312101888] }
+duration_secs = 30.0
+color = [33, 149, 224, 255]
+difficulties = ["master"]
+conditions = [
+  { type = "counter_compare", counter_id = "nefra_twin_attack_count", operator = "eq", value = 12 },
+]
+
+[[boss.timer]]
+id = "nefra_turn_boss"
+name = "Turn boss"
+duration_secs = 30.0
+is_alert = true
+color = [255, 128, 0, 255]
+icon_ability_id = 3342034312102187
+difficulties = ["veteran", "master"]
+display_targets = ["timers_a"]
+roles = []
+queue_countdown_bar = false
+queue_hide_from_next = false
+
+[boss.timer.trigger]
+type = "counter_reaches"
+counter_id = "nefra_twin_stacks"
+value = 14
+
+[[boss.timer]]
+id = "nefra_raid_cleave"
+name = "Raid Cleave"
+trigger = { type = "ability_cast", abilities = [3342034312101888] }
+is_alert = true
+alert_text = "Raid Cleave"
+color = [219, 37, 41, 255]
+icon_ability_id = 3342034312102187
+difficulties = ["master"]
+conditions = [
+  { type = "counter_compare", counter_id = "nefra_twin_attack_count", operator = "eq", value = 15 },
+]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Gate Commander Draxus
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "draxus"
+name = "Gate Commander Draxus"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Draxus"
+ids = [3273924720721920, 3303401081274368, 3303392491339776, 3303405376241664]
+is_boss = true
+is_kill_target = true
+
+# -- HP markers
+[[boss.entities.hp_markers]]
+hp_percent = 90.0
+label = "Escape"
+
+[[boss.entities.hp_markers]]
+hp_percent = 60.0
+label = "Escape"
+
+[[boss.entities.hp_markers]]
+hp_percent = 30.0
+label = "Escape"
+
+[[boss.entities]]
+name = "Subteroth"
+ids = [3281320654405632]
+is_boss = false
+
+[[boss.entities]]
+name = "Dispatcher"
+ids = [3288141062471680]
+is_boss = false
+
+[[boss.entities]]
+name = "Corrupter"
+ids = [3288136767504384]
+is_boss = false
+
+[[boss.entities]]
+name = "Dismantler"
+ids = [3288029393321984, 3281329244340224]
+is_boss = false
+
+
+# ═════ Counters
+
+[[boss.counters]]
+id = "draxus_subteroth_count"
+name = "Subteroth Spawns"
+increment_on = { type = "npc_appears", selector = ["Subteroth"] }
+
+[[boss.counters]]
+id = "draxus_dispatcher_count"
+name = "Dispatcher Spawns"
+increment_on = { type = "npc_appears", selector = ["Dispatcher"] }
+
+[[boss.counters]]
+id = "draxus_corrupter_count"
+name = "Corrupter Spawns"
+increment_on = { type = "npc_appears", selector = ["Corrupter"] }
+
+[[boss.counters]]
+id = "draxus_dismantler_count"
+name = "Dismantler Spawns"
+increment_on = { type = "npc_appears", selector = ["Dismantler"] }
+
+[[boss.counters]]
+id = "draxus_bulwark_count"
+name = "Bulwark Spawns"
+increment_on = { type = "npc_appears", selector = [
+  3288145357438976,
+  "Bulwark",
+] }
+
+
+# Entity ID:
+# ═════ Timers
+# Draxus escapes at HP thresholds, spawning add waves
+[[boss.timer]]
+id = "draxus_grenade"
+name = "Grenade"
+trigger = { type = "ability_cast", abilities = [3289043005603840] }
+cancel_trigger = { type = "timer_expires", timer_id = "draxus_escape" }
+icon_ability_id = 3289043005603840
+duration_secs = 12.0
+color = [204, 182, 30, 255]
+difficulties = ["veteran", "master"]
+
+# -- Suppressive Fire --
+# Channeled attack
+
+[[boss.timer]]
+id = "draxus_suppressive"
+name = "Suppressive Fire"
+trigger = { type = "ability_cast", abilities = [3289034415669248] }
+cancel_trigger = { type = "timer_started", timer_id = "draxus_escape" }
+icon_ability_id = 3290348675661824
+duration_secs = 15.0
+color = [219, 96, 28, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "draxus_escape"
+name = "Draxus Escape"
+alert_text = "Draxus Escape"
+color = [219, 27, 24, 255]
+difficulties = ["veteran", "master"]
+is_alert = true
+trigger = { type = "any_of", conditions = [
+  { type = "boss_hp_below", hp_percent = 90.0, selector = [
+    "Draxus",
+  ] },
+  { type = "boss_hp_below", hp_percent = 60.0, selector = [
+    "Draxus",
+  ] },
+  { type = "boss_hp_below", hp_percent = 30.0, selector = [
+    "Draxus",
+  ] },
+] }
+
+[[boss.timer]]
+id = "draxus_w1"
+name = "W1: Subteroths"
+trigger = { type = "combat_start" }
+duration_secs = 50.0
+color = [33, 151, 18, 255]
+icon_ability_id = 3281548287672595
+difficulties = ["veteran", "master"]
+cancel_trigger = { type = "timer_started", timer_id = "draxus_w2" }
+
+[[boss.timer]]
+id = "draxus_w2"
+name = "W2: Dispatchers"
+trigger = { type = "counter_reaches", counter_id = "draxus_subteroth_count", value = 1 }
+duration_secs = 50.0
+color = [33, 151, 18, 255]
+icon_ability_id = 3288162537308160
+difficulties = ["veteran", "master"]
+cancel_trigger = { type = "timer_started", timer_id = "draxus_w3" }
+
+[[boss.timer]]
+id = "draxus_w3"
+name = "W3: Draxus Returns, Corruptors"
+trigger = { type = "counter_reaches", counter_id = "draxus_dispatcher_count", value = 1 }
+duration_secs = 50.0
+color = [20, 136, 30, 255]
+icon_ability_id = 3288098112798720
+difficulties = ["veteran", "master"]
+cancel_trigger = { type = "timer_started", timer_id = "draxus_w4" }
+
+[[boss.timer]]
+id = "draxus_w4"
+name = "W4: Dismantlers"
+# Entity ID: 3288136767504384
+trigger = { type = "counter_reaches", counter_id = "draxus_corrupter_count", value = 1 }
+duration_secs = 50.0
+color = [20, 136, 22, 255]
+icon_ability_id = 3288033688289553
+difficulties = ["veteran", "master"]
+cancel_trigger = { type = "timer_started", timer_id = "draxus_w5" }
+
+[[boss.timer]]
+id = "draxus_w5"
+name = "W5: Draxus, Bulwarks"
+trigger = { type = "counter_reaches", counter_id = "draxus_dismantler_count", value = 1 }
+duration_secs = 50.0
+color = [20, 136, 22, 255]
+icon_ability_id = 3288171127242752
+difficulties = ["veteran", "master"]
+cancel_trigger = { type = "timer_started", timer_id = "draxus_w6" }
+
+[[boss.timer]]
+id = "draxus_w6"
+name = "W6: Dismantlers"
+trigger = { type = "counter_reaches", counter_id = "draxus_bulwark_count", value = 1 }
+duration_secs = 50.0
+color = [20, 136, 26, 255]
+icon_ability_id = 3288033688289553
+difficulties = ["veteran", "master"]
+cancel_trigger = { type = "timer_started", timer_id = "draxus_w7" }
+
+[[boss.timer]]
+id = "draxus_w7"
+name = "W7: Guardians"
+trigger = { type = "counter_reaches", counter_id = "draxus_dismantler_count", value = 3 }
+duration_secs = 50.0
+color = [20, 136, 26, 255]
+icon_ability_id = 3381651090440192
+difficulties = ["veteran", "master"]
+cancel_trigger = { type = "timer_started", timer_id = "draxus_w8" }
+
+[[boss.timer]]
+id = "draxus_w8"
+name = "W8: 4 Corruptors"
+trigger = { type = "counter_reaches", counter_id = "draxus_subteroth_count", value = 13 }
+duration_secs = 50.0
+color = [20, 136, 26, 255]
+icon_ability_id = 3288098112798720
+difficulties = ["veteran", "master"]
+cancel_trigger = { type = "timer_started", timer_id = "draxus_w9" }
+
+[[boss.timer]]
+id = "draxus_w9"
+name = "W9: Draxus and Guardians"
+trigger = { type = "counter_reaches", counter_id = "draxus_bulwark_count", value = 5 }
+duration_secs = 50.0
+color = [20, 136, 26, 255]
+icon_ability_id = 3381651090440192
+difficulties = ["veteran", "master"]
+cancel_trigger = { type = "counter_reaches", counter_id = "draxus_corrupter_count", value = 10 }
+
+
+# -- Emergency Shielding --
+# Final phase immunity - alert when applied and removed
+
+[[boss.timer]]
+id = "draxus_shield_on"
+name = "Emergency Shield"
+trigger = { type = "effect_applied", effects = [3321693346988296] }
+is_alert = true
+alert_text = "Draxus Immune"
+color = [29, 224, 219, 255]
+icon_ability_id = 3321693346988296
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "draxus_shield_off"
+name = "Shield Down - BURN"
+trigger = { type = "effect_removed", effects = [3321693346988296] }
+is_alert = true
+alert_text = "Shield Down!"
+color = [33, 224, 218, 255]
+icon_ability_id = 3321693346988296
+difficulties = ["veteran", "master"]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Grob'thok, Who Feeds the Forge
+# ═══════════════════════════════════════════════════════════════════════════════
+# Kite fight with lava, adds, and a magnet mechanic.
+# Source: ORBS timer data
+
+[[boss]]
+id = "grobthok"
+name = "Grob'thok"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Grob'thok"
+ids = [3302567857618944, 3302559267684352, 3273929015689216, 3302563562651648]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities]]
+name = "Dreadful Ugnaught"
+ids = [3307678868701184]
+is_boss = false
+
+# ─── Timers ─────────────────────────────────────────────────────────────────────
+
+# -- Pipe Smash --
+# Boss smashes pipes to release lava. 60s from start, 63s after each cast.
+
+[[boss.timer]]
+id = "grobthok_pipe_smash_cs"
+name = "Pipe Smash Combat Start"
+icon_ability_id = 3307601559289856
+display_text = "Pipe Smash"
+trigger = { type = "combat_start" }
+duration_secs = 61.0
+color = [204, 182, 30, 255]
+difficulties = ["veteran", "master"]
+chains_to = "grobthok_pipe_smash"
+
+[[boss.timer]]
+id = "grobthok_pipe_smash"
+name = "Pipe Smash"
+icon_ability_id = 3307601559289856
+trigger = { type = "ability_cast", abilities = [3307601559289856] }
+duration_secs = 63.0
+color = [204, 182, 30, 255]
+difficulties = ["veteran", "master"]
+
+# -- Adds --
+# Spawns at 97% HP, then 25s after each spawn ability.
+
+[[boss.timer]]
+id = "grobthok_adds_hp"
+name = "Adds"
+trigger = { type = "boss_hp_below", hp_percent = 97.0, selector = [
+  "Grob'thok",
+] }
+is_alert = true
+alert_text = "Adds Spawning"
+color = [25, 148, 13, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "grobthok_adds"
+name = "Adds"
+trigger = { type = "ability_cast", abilities = [3315585903493120] }
+duration_secs = 25.0
+color = [25, 148, 13, 255]
+difficulties = ["veteran", "master"]
+
+# -- Lava
+
+[[boss.timer]]
+id = "grobthok_lava_start"
+name = "First Mining Droid"
+trigger = { type = "boss_hp_below", hp_percent = 95.0, selector = [
+  "Grob'thok",
+] }
+is_alert = true
+alert_text = "Lava "
+color = [224, 108, 29, 255]
+icon_ability_id = 3294703772500224
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "grobthok_lava_dot"
+name = "Mining Droid"
+trigger = { type = "ability_cast", abilities = [3294703772499968] }
+icon_ability_id = 3294703772500224
+duration_secs = 30.0
+color = [224, 108, 29, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "grobthok_dot_debuff"
+name = "Mining Droid on Self"
+trigger = { type = "effect_applied", effects = [
+  3294703772500224,
+], target = "local_player" }
+icon_ability_id = 3294703772500224
+is_alert = true
+alert_text = "MINING DROID ON YOU"
+color = [224, 108, 29, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "grobthok_overhead_smash"
+name = "Overhead Smash"
+trigger = { type = "ability_cast", abilities = [3285993578823680] }
+icon_ability_id = 3285993578823680
+duration_secs = 33.0
+color = [144, 24, 224, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "grobthok_roar"
+name = "Roar"
+trigger = { type = "ability_cast", abilities = [3285997873790976] }
+icon_ability_id = 3285997873790976
+duration_secs = 15.0
+color = [219, 28, 28, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "grobthok_stunned"
+name = "Stunned"
+trigger = { type = "effect_applied", effects = [3286745198100740] }
+duration_secs = 10.0
+color = [200, 150, 0, 255]
+icon_ability_id = 3286745198100740
+difficulties = ["veteran", "master"]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 4: Corruptor Zero
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "corruptor_zero"
+name = "Corruptor Zero"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Corruptor Zero"
+ids = [3273933310656512, 3303542815195136, 3303534225260544, 3303551405129728]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities]]
+name = "D-13 Corruption Droid"
+ids = [3282596259692544]
+is_boss = false
+
+[[boss.entities]]
+name = "D-15 Corruption Droid"
+ids = [3282639209365504]
+is_boss = false
+
+[[boss.timer]]
+id = "corruptor_zero_ranged_adds"
+name = "Ranged Adds"
+trigger = { type = "npc_appears", selector = ["D-13 Corruption Droid"] }
+duration_secs = 60.0
+color = [27, 158, 20, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "corruptor_zero_melee_adds"
+name = "Melee Adds"
+trigger = { type = "npc_appears", selector = ["D-15 Corruption Droid"] }
+duration_secs = 60.0
+color = [27, 158, 20, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "corruptor_zero_missile_barrage"
+name = "Missile Barrage"
+trigger = { type = "ability_cast", abilities = [3286483205095424] }
+icon_ability_id = 3286483205095424
+duration_secs = 15.0
+color = [125, 0, 0, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "corruptor_zero_heavy_slash"
+name = "Heavy Slash"
+trigger = { type = "ability_cast", abilities = [3286530449735680] }
+icon_ability_id = 3286530449735680
+duration_secs = 20.0
+color = [200, 0, 0, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "corruptor_zero_chest_laser"
+name = "Chest Laser"
+trigger = { type = "ability_cast", abilities = [3285409463271424] }
+icon_ability_id = 3285409463271424
+duration_secs = 15.0
+color = [255, 135, 0, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "corruptor_zero_beam_melee_mode"
+name = "Beam (Melee Mode)"
+display_text = "Overcharged Beam"
+trigger = { type = "effect_applied", effects = [3284760923209993] }
+duration_secs = 60.0
+color = [219, 96, 28, 255]
+icon_ability_id = 3284760923209993
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "corruptor_zero_gravity_ranged_mode"
+name = "Gravity - Ranged Mode Start"
+display_text = "Anti-Gravity Field"
+icon_ability_id = 3284760923209990
+duration_secs = 60.0
+color = [219, 30, 28, 255]
+difficulties = ["veteran", "master"]
+trigger = { type = "any_of", conditions = [
+  { type = "combat_start" },
+  { type = "effect_applied", effects = [
+    3284760923209990,
+  ] },
+] }
+
+[[boss.timer]]
+id = "corruptor_zero_concussion_mine"
+name = "Concussion Mine"
+trigger = { type = "any_of", conditions = [
+  { type = "ability_cast", abilities = [
+    3321882325549056,
+  ] },
+  { type = "ability_cast", abilities = [
+    3344271990063104,
+  ] },
+] }
+icon_ability_id = 3321882325549056
+duration_secs = 21.5
+color = [255, 0, 111, 255]
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "corruptor_zero_gravity_delay"
+name = "Gravity Field (Delayed)"
+display_text = "Anti-Gravity Field"
+icon_ability_id = 3285972103987200
+duration_secs = 11.5
+color = [200, 200, 30, 255]
+difficulties = ["veteran", "master"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [3344271990063104]
+source = "any"
+target = "any"
+
+[[boss.timer.conditions]]
+type = "all_of"
+
+[[boss.timer.conditions.conditions]]
+type = "not"
+
+[boss.timer.conditions.conditions.condition]
+type = "timer_time_remaining"
+timer_id = "corruptor_zero_gravity_field"
+operator = "gt"
+value = 11.5
+
+[[boss.timer.conditions.conditions]]
+type = "timer_time_remaining"
+timer_id = "corruptor_zero_beam_melee_mode"
+operator = "gte"
+value = 0.0
+
+[[boss.timer]]
+id = "corruptor_zero_gravity_field"
+name = "Gravity Field (Cooldown)"
+display_text = "Anti-Gravity Field"
+icon_ability_id = 3285972103987200
+duration_secs = 33.0
+color = [200, 200, 30, 255]
+difficulties = ["veteran", "master"]
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [3285972103987200]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_started"
+timer_id = "corruptor_zero_gravity_delay"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_started"
+timer_id = "corruptor_zero_gravity_ranged_mode"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 5: Dread Master Brontes
+# ═══════════════════════════════════════════════════════════════════════════════
+# Complex multi-phase fight with hands, fingers, orbs, and clocks.
+
+[[boss]]
+id = "brontes"
+name = "Dread Master Brontes"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Dread Master Brontes"
+ids = [3273937605623808, 3303538520227840, 3303529930293248, 3303547110162432]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities.hp_markers]]
+hp_percent = 52.0
+label = "Clones Stop"
+difficulties = ["veteran", "master"]
+
+[[boss.entities]]
+name = "Right Hand of Brontes"
+ids = [3275625527771136]
+is_boss = true
+
+[[boss.entities]]
+name = "Left Hand of Brontes"
+ids = [3277721471811584]
+is_boss = true
+
+[[boss.entities]]
+name = "Hand of Brontes"
+ids = [3303276527222784]
+is_boss = false
+
+[[boss.entities]]
+name = "Finger"
+ids = [3275642707640320]
+is_boss = false
+
+[[boss.entities]]
+name = "Fingers-2"
+ids = [3303289412124672]
+is_boss = false
+
+[[boss.entities]]
+name = "Energy Sphere"
+ids = [3280057934020608]
+is_boss = false
+
+[[boss.entities]]
+name = "Reach of Brontes"
+ids = [3298281480257536]
+is_boss = false
+
+[[boss.entities]]
+name = "Droids"
+ids = [3300910000242688]
+is_boss = false
+is_kill_target = false
+# ─── Phases ─────────────────────────────────────────────────────────────────────
+
+[[boss.phases]]
+id = "hands"
+name = "Hands"
+start_trigger = { type = "combat_start" }
+
+[[boss.phases]]
+id = "reaches"
+name = "Reaches"
+start_trigger = { type = "npc_appears", selector = ["Reach of Brontes"] }
+
+[[boss.phases]]
+id = "kebus"
+name = "Kephess"
+start_trigger = { type = "boss_hp_below", hp_percent = 99.9, selector = [
+  "Dread Master Brontes",
+] }
+
+[[boss.phases]]
+id = "clock"
+name = "Clock"
+
+[boss.phases.start_trigger]
+type = "npc_appears"
+selector = ["Droids"]
+
+[[boss.phases]]
+id = "fingers"
+name = "Fingers"
+
+[boss.phases.start_trigger]
+type = "counter_reaches"
+counter_id = "brontes_droid_deaths"
+value = 6
+
+[[boss.phases]]
+id = "burn"
+name = "Burn"
+start_trigger = { type = "ability_cast", abilities = [3311840692011008] }
+
+[[boss.counter]]
+id = "finger_deaths"
+name = "Finger Deaths"
+increment_on = { type = "entity_death", selector = ["Fingers-2"] }
+
+[[boss.counter]]
+id = "brontes_droid_deaths"
+name = "Droid deaths"
+initial_value = 0
+decrement = false
+
+[boss.counter.increment_on]
+type = "entity_death"
+selector = ["Droids"]
+
+[[boss.challenges]]
+id = "brontes_burn"
+name = "Brontes Burn"
+metric = "damage"
+conditions = [
+  { type = "target", match = { selector = [
+    "Dread Master Brontes",
+  ] } },
+  { type = "phase", phase_ids = [
+    "burn",
+  ] },
+]
+color = [100, 210, 237, 255]
+
+[[boss.timer]]
+id = "brontes_clone_1st"
+name = "Clone 1st"
+display_text = "Kephess Clone"
+trigger = { type = "boss_hp_below", hp_percent = 96.0, selector = [
+  "Dread Master Brontes",
+] }
+is_alert = true
+alert_text = "Clone Spawning"
+color = [32, 168, 18, 255]
+icon_ability_id = 3309121977712640
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "brontes_clone"
+name = "Clone Spawn"
+trigger = { type = "ability_cast", abilities = [3309152042483712] }
+cancel_trigger = { type = "timer_expires", timer_id = "brontes_cant_clone" }
+display_text = "Kephess Clone"
+duration_secs = 30.0
+color = [32, 168, 18, 255]
+icon_ability_id = 3309121977712640
+difficulties = ["veteran", "master"]
+
+
+[[boss.timer]]
+id = "brontes_cant_clone"
+name = "Brontes No More Clones"
+trigger = { type = "boss_hp_below", hp_percent = 52.0, selector = [
+  "Dread Master Brontes",
+] }
+is_alert = true
+alert_text = "Brontes Below 52% - No More Clones"
+color = [32, 168, 18, 255]
+difficulties = ["veteran", "master"]
+conditions = [{ type = "phase_active", phase_ids = ["kebus"] }]
+
+[[boss.timer]]
+id = "brontes_reaches_active"
+name = "Reaches Active"
+trigger = { type = "counter_reaches", counter_id = "brontes_hand_deaths_p1", value = 2 }
+duration_secs = 23.0
+color = [32, 220, 220, 255]
+icon_ability_id = 3346827495604224
+difficulties = ["veteran", "master"]
+
+[[boss.counter]]
+id = "brontes_hand_deaths_p1"
+name = "Phase 1 Hand Deaths"
+increment_on = { type = "any_of", conditions = [
+  { type = "entity_death", selector = [
+    3275625527771136,
+  ] },
+  { type = "entity_death", selector = [
+    3277721471811584,
+  ] },
+] }
+
+[[boss.timer]]
+id = "brontes_hands_finger_spawn"
+name = "Finger Spawn"
+trigger = { type = "npc_appears", selector = ["Finger"] }
+cancel_trigger = { type = "phase_ended", phase_id = "hands" }
+duration_secs = 40.0
+color = [255, 100, 100, 255]
+icon_ability_id = 3303757563559936
+can_refresh = false
+difficulties = ["veteran", "master"]
+conditions = [{ type = "phase_active", phase_ids = ["hands"] }]
+
+[[boss.timer]]
+id = "brontes_enraged_finger"
+name = "Enraged finger"
+duration_secs = 30.0
+is_alert = true
+color = [255, 128, 0, 255]
+icon_ability_id = 3306089730801920
+difficulties = [ "veteran", "master"]
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [3306089730801920]
+
+[[boss.timer]]
+id = "brontes_sphere_aggro"
+name = "Sphere Aggro"
+trigger = { type = "target_set", selector = [
+  "Energy Sphere",
+], target = "local_player" }
+is_alert = true
+alert_text = "Sphere Targeting You!"
+color = [213, 41, 31, 255]
+icon_ability_id = 3292247051206656
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "brontes_fingers_knock_1st"
+name = "Fingers Knockback 1st"
+trigger = { type = "ability_cast", abilities = [3303572879966208] }
+duration_secs = 12.0
+color = [224, 38, 29, 255]
+icon_ability_id = 3347252697366794
+difficulties = ["veteran", "master"]
+
+[[boss.timer]]
+id = "brontes_fingers_knock"
+trigger = { type = "any_of", conditions = [
+  { type = "timer_expires", timer_id = "brontes_fingers_knock_1st" },
+] }
+name = "Fingers Knockback"
+duration_secs = 30.0
+color = [219, 33, 32, 255]
+icon_ability_id = 3347252697366794
+difficulties = ["veteran", "master"]
+cancel_trigger = { type = "counter_reaches", counter_id = "finger_deaths", value = 6 }
+chains_to = "brontes_fingers_knock"
+
+[[boss.timer]]
+id = "brontes_arcing_assault"
+name = "Arcing Assault"
+duration_secs = 17.0
+alert_on = "none"
+color = [153, 0, 255, 255]
+icon_ability_id = 3308868574642455
+difficulties = ["story", "veteran", "master"]
+enabled = true
+can_be_refreshed = true
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [3308920114249728]
+source = "any"
+target = "any"

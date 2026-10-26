@@ -1,0 +1,99 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Taral V - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3 bosses, 1 bonus boss, 2 optional bosses
+
+[area]
+name = "Taral V"
+area_id = 833571547775677
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Captain Shivanek
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "captain_shivanek"
+name = "Captain Shivanek"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Captain Shivanek"
+ids = [2513870128152576]
+is_boss = true
+
+[[boss.entities]]
+name = "Ripper"
+ids = [2513865833185280]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: PD-44
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "pd_44"
+name = "PD-44"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "PD-44"
+ids = [2513861538217984]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: General Edikar
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "general_edikar"
+name = "General Edikar"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "General Edikar"
+ids = [2531994890141696]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bonus Boss: Lord Hasper
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "lord_hasper"
+name = "Lord Hasper"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Lord Hasper"
+ids = [2513857243250688]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Optional Boss: Handler Gattan & Trained Vine Cats
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "handler_gattan_vine_cats"
+name = "Handler Gattan & Trained Vine Cats"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Handler Gattan"
+ids = [2513887308021760]
+is_boss = true
+
+[[boss.entities]]
+name = "Trained Vine Cat"
+ids = [2513840063381504]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Optional Boss: Doctor Zharen
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "doctor_zharen"
+name = "Doctor Zharen"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Doctor Zharen"
+ids = [2513805703643136]
+is_boss = true

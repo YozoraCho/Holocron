@@ -1,0 +1,78 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Maelstrom Prison - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# Maelstrom Prison. 4 bosses, 1 bonus boss
+
+[area]
+name = "Maelstrom Prison"
+area_id = 833571547775676
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Colonel Daksh
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+name = "Colonel Daksh"
+id = "colonel_daksh"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Colonel Daksh"
+ids = [2513608135147520]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Lord Kancras
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+name = "Lord Kancras"
+id = "lord_kancras"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Lord Kancras"
+ids = [2513668264689664]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Lord Vanithrast
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+name = "Lord Vanithrast"
+id = "lord_vanithrast"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Lord Vanithrast"
+ids = [2513672559656960]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 4: Grand Moff Kilran
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+name = "Grand Moff Kilran"
+id = "grand_moff_kilran"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Grand Moff Kilran"
+ids = [2536938397499392]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bonus Boss: Ancient Maelstrom Flayer
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "ancient_maelstrom_flayer"
+name = "Ancient Maelstrom Flayer"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Ancient Maelstrom Flayer"
+ids = [2513784228806656]
+is_kill_target = true
+is_boss = true

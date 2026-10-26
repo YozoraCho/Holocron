@@ -1,0 +1,123 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Directive 7 - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 6 bosses, 1 bonus boss
+
+[area]
+name = "Directive 7"
+area_id = 833571547775671
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Detector
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "detector"
+name = "Detector"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Detector"
+ids = [2512014702280704, 1626340906237952]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Assassin Droids
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "assassin_droids"
+name = "Assassin Droids"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Mentor Assassin Theta"
+ids = [2511958867705856, 746748783886336]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities]]
+name = "Mentor Assassin Beta"
+ids = [2511954572738560, 746753078853632]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities]]
+name = "Mentor Assassin Zeta"
+ids = [2511963162673152, 746757373820928]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Interrogator
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "interrogator"
+name = "Interrogator"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Interrogator"
+ids = [2512053356986368, 1627981583745024]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 4: Bulwark
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "bulwark"
+name = "Bulwark"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Bulwark"
+ids = [2511984637509632, 751348693860352]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 5: Assembler
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "assembler"
+name = "Assembler"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Assembler"
+ids = [2511976047575040, 1628604354002944]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 6: Mentor
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "mentor"
+name = "Mentor"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Mentor"
+ids = [2512100601626624, 743540443316224, 2144842243112960]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities]]
+name = "Mentor Core Guardian"
+ids = [892073297313792, 2512083421757440]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bonus Boss: Replicator
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "replicator"
+name = "Replicator"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Replicator"
+ids = [1629334498443264, 2512109191561216]
+is_boss = true

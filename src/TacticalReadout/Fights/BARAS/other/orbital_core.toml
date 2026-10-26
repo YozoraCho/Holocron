@@ -1,0 +1,94 @@
+[area]
+name = "Orbital Core"
+id = 945872057669674
+area_type = "lair_boss"
+
+[[boss]]
+id = "orbital_core"
+name = "Orbital Core"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Orbital Core"
+ids = [4906905646399488, 4906549164113920]
+is_boss = true
+is_kill_target = true
+triggers_encounter = true
+
+[[boss.entities]]
+name = "Glacial Preserver"
+ids = [4905733120327680]
+
+[[boss.entities]]
+name = "Sporogenic Probe"
+ids = [4905797544837120]
+
+[[boss.entities]]
+name = "G30-MN Mining Unit"
+ids = [4905737415294976]
+
+[[boss.entities]]
+name = "Damaged Droids"
+ids = [4916796956082176, 4916801251049472, 4916792661114880]
+
+[[boss.phases]]
+id = "oc_intro"
+name = "Intro"
+start_trigger = { type = "combat_start" }
+
+[[boss.phases]]
+id = "oc_glacial"
+name = "Glacial"
+start_trigger = { type = "npc_appears", selector = ["Glacial Preserver"] }
+end_trigger = { type = "entity_death", selector = ["Glacial Preserver"] }
+
+[[boss.phases]]
+id = "oc_spores"
+name = "Spores"
+start_trigger = { type = "npc_appears", selector = ["Sporogenic Probe"] }
+end_trigger = { type = "effect_removed", effects = [
+  4906768207446016,
+], target = { selector = [
+  "Orbital Core",
+] } }
+
+[[boss.phases]]
+id = "oc_lava"
+name = "Mining Unit"
+start_trigger = { type = "npc_appears", selector = ["G30-MN Mining Unit"] }
+end_trigger = { type = "entity_death", selector = ["G30-MN Mining Unit"] }
+
+[[boss.phases]]
+id = "oc_trio"
+name = "Trio"
+start_trigger = { type = "npc_appears", selector = ["Damaged Droids"] }
+
+[[boss.phases]]
+id = "oc_meltdown"
+name = "Meltdown"
+start_trigger = { type = "ability_cast", abilities = [4906772502413312] }
+
+[[boss.phases]]
+id = "oc_core"
+name = "Core Burn"
+start_trigger = { type = "any_of", conditions = [
+  { type = "phase_ended", phase_id = "oc_glacial" },
+  { type = "phase_ended", phase_id = "oc_spores" },
+] }
+end_trigger = { type = "effect_applied", effects = [4906768207446016] }
+
+[[boss.challenges]]
+id = "oc_core_dps"
+name = "Core DPS"
+conditions = [
+  { type = "phase", phase_ids = [
+    "oc_core",
+    "oc_meltdown",
+  ] },
+  { type = "target", match = { selector = [
+    "Orbital Core",
+  ] } },
+]
+metric = "damage"
+color = [24, 156, 139, 255]

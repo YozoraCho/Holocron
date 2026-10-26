@@ -1,0 +1,439 @@
+[area]
+name = "Relentless Replication"
+area_id = 945872057669657
+area_type = "operation"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss: Propagator Core XR-53
+# ═══════════════════════════════════════════════════════════════════════════════
+
+[[boss]]
+id = "propagator_core_xr53"
+name = "Propagator Core XR-53"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Defender Construct"
+ids = [4831241207545856]
+is_boss = true
+is_kill_target = false
+pushes_at = 0.0
+
+[[boss.entities.shields]]
+label = "Volatile Shielding"
+
+[boss.entities.shields.start_trigger]
+type = "effect_applied"
+effects = [4858763357978892]
+source = "any"
+
+[boss.entities.shields.start_trigger.target]
+selector = [4831241207545856]
+
+[boss.entities.shields.end_trigger]
+type = "effect_removed"
+effects = [4858763357978892]
+source = "any"
+
+[boss.entities.shields.end_trigger.target]
+selector = [4831241207545856]
+
+[[boss.entities.shields.hp]]
+total = 1500000
+
+[[boss.entities]]
+name = "Rampaging Construct"
+ids = [4831722243883008]
+is_boss = true
+is_kill_target = false
+pushes_at = 0.0
+
+[[boss.entities.shields]]
+label = "Volatile Shielding"
+
+[boss.entities.shields.start_trigger]
+type = "effect_applied"
+effects = [4858763357978892]
+source = "any"
+
+[boss.entities.shields.start_trigger.target]
+selector = [4831722243883008]
+
+[boss.entities.shields.end_trigger]
+type = "effect_removed"
+effects = [4858763357978892]
+source = "any"
+
+[boss.entities.shields.end_trigger.target]
+selector = [4831722243883008]
+
+[[boss.entities.shields.hp]]
+total = 1500000
+
+[[boss.entities]]
+name = "Supplicant Construct"
+ids = [4831533265321984]
+is_boss = true
+is_kill_target = false
+pushes_at = 0.0
+
+[[boss.entities]]
+name = "Propagator Core XR-53"
+ids = [4824927605620736, 4847325860069376]
+is_boss = true
+is_kill_target = true
+
+[[boss.entities.shields]]
+label = "Preservation Shield"
+
+[boss.entities.shields.start_trigger]
+type = "effect_applied"
+effects = [4859540747059512]
+source = "any"
+target = "any"
+
+[boss.entities.shields.end_trigger]
+type = "effect_removed"
+effects = [4859540747059512]
+source = "any"
+target = "any"
+
+[[boss.entities.shields.hp]]
+total = 1000000
+
+[[boss.entities.shields]]
+label = "Preservation Shield"
+
+[boss.entities.shields.start_trigger]
+type = "effect_applied"
+effects = [4859540747059514]
+source = "any"
+target = "any"
+
+[boss.entities.shields.end_trigger]
+type = "effect_removed"
+effects = [4859540747059514]
+source = "any"
+target = "any"
+
+[[boss.entities.shields.hp]]
+total = 2000000
+
+[[boss.phases]]
+id = "propagator_core_xr53_intro"
+name = "Propagator Core XR-53"
+enabled = true
+
+[boss.phases.start_trigger]
+type = "combat_start"
+
+[[boss.phases]]
+id = "propagator_core_xr53_prime_directive"
+name = "Prime Directive"
+enabled = true
+
+[boss.phases.start_trigger]
+type = "effect_removed"
+effects = [4844731699822856]
+source = "any"
+target = "any"
+
+[[boss.phases.conditions]]
+type = "phase_active"
+phase_ids = ["propagator_core_xr53_intro", "propagator_core_xr53_main_phase"]
+
+[[boss.phases]]
+id = "propagator_core_xr53_main_phase"
+name = "Propagator Core XR-53"
+enabled = true
+
+[boss.phases.start_trigger]
+type = "damage_taken"
+abilities = [4824914720718848]
+source = "any"
+target = "any"
+
+[[boss.phases.conditions]]
+type = "phase_active"
+phase_ids = ["propagator_core_xr53_prime_directive"]
+
+[[boss.timer]]
+id = "propagator_core_xr53_lethal_strike"
+name = "Lethal Strike"
+duration_secs = 31.5
+color = [28, 113, 216, 255]
+icon_ability_id = 4826160261234688
+difficulties = ["story", "veteran", "master"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4826160261234688]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_1st_prime_directive"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_prime_directive"
+
+[[boss.timer]]
+id = "propagator_core_xr53_lethal_strike_rc"
+name = "Lethal Strike After Recovery"
+display_text = "Lethal Strike"
+duration_secs = 32.0
+color = [28, 113, 216, 255]
+icon_ability_id = 4826160261234688
+difficulties = ["story", "veteran", "master"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4832241934925824]
+source = "any"
+target = "any"
+
+[[boss.timer]]
+id = "propagator_core_xr53_cleanse_flood_add"
+name = "Cleanse Flood Add"
+duration_secs = 28.0
+color = [51, 200, 237, 255]
+icon_ability_id = 4857616601710592
+difficulties = ["master"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_lethal_strike_rc"
+
+[[boss.timer]]
+id = "propagator_core_xr53_clean_target"
+name = "Clean Target"
+duration_secs = 30.0
+is_alert = true
+alert_text = "Clean Duty"
+color = [51, 200, 237, 255]
+icon_ability_id = 4857616601710592
+difficulties = ["master"]
+
+[boss.timer.trigger]
+type = "effect_applied"
+effects = [4857616601710868]
+source = "any"
+target = "local_player"
+
+[[boss.timer]]
+id = "propagator_core_xr53_collection_droid_selfdestruct"
+name = "Cleaning Ends"
+duration_secs = 30.0
+is_alert = true
+alert_text = "Cleaning Ends"
+color = [51, 200, 237, 255]
+icon_ability_id = 4861202899402752
+difficulties = ["master"]
+
+[boss.timer.trigger]
+type = "effect_removed"
+effects = [4861069755416832]
+source = "any"
+target = "any"
+
+[[boss.timer]]
+id = "propagator_core_xr53_1st_prime_directive"
+name = "1st Prime Directive"
+duration_secs = 120.0
+color = [129, 61, 156, 255]
+icon_ability_id = 4859643826274304
+difficulties = ["story", "veteran", "master"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "combat_start"
+
+[[boss.timer]]
+id = "propagator_core_xr53_prime_directive"
+name = "Prime Directive"
+duration_secs = 118.0
+color = [129, 61, 156, 255]
+icon_ability_id = 4859643826274304
+difficulties = ["story", "veteran", "master"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_lethal_strike_rc"
+
+[[boss.timer]]
+id = "propagator_core_xr53_prepare_for_harvest"
+name = "Prepare for Harvest"
+duration_secs = 18.0
+color = [134, 94, 60, 255]
+icon_ability_id = 4824914720718848
+difficulties = ["story", "veteran", "master"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4824914720718848]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_1st_prime_directive"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_prime_directive"
+
+[[boss.timer]]
+id = "propagator_core_xr53_hungering_bite"
+name = "Hungering Bite"
+duration_secs = 22.5
+color = [237, 23, 93, 255]
+icon_ability_id = 4825876793393152
+difficulties = ["story", "veteran", "master"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4825975577640960]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_1st_prime_directive"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_prime_directive"
+
+[[boss.timer]]
+id = "propagator_core_xr53_acidic_rocketry"
+name = "Acidic Rocketry"
+duration_secs = 21.0
+color = [246, 211, 45, 255]
+icon_ability_id = 4827160988614656
+difficulties = ["story", "veteran", "master"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4827160988614656]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_1st_prime_directive"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_prime_directive"
+
+[[boss.timer]]
+id = "propagator_core_xr53_extraneous_expulsion"
+name = "Extraneous Expulsion"
+duration_secs = 26.5
+color = [255, 128, 0, 255]
+icon_ability_id = 4825717879603200
+difficulties = ["story", "veteran", "master"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4825717879603200]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_1st_prime_directive"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_prime_directive"
+
+[[boss.timer]]
+id = "propagator_core_xr53_hunting_grounds"
+name = "Hunting Grounds"
+duration_secs = 30.0
+color = [133, 19, 32, 255]
+icon_ability_id = 4828045751877632
+difficulties = ["veteran", "master"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4828045751877632]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_1st_prime_directive"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_prime_directive"
+
+[[boss.timer]]
+id = "propagator_core_xr53_prey_seeker"
+name = "Prey Seeker"
+duration_secs = 46.0
+color = [46, 194, 126, 255]
+icon_ability_id = 4829463091085312
+difficulties = ["story", "veteran", "master"]
+display_target = "timers_a"
+
+[boss.timer.trigger]
+type = "ability_cast"
+abilities = [4829463091085312]
+source = "any"
+target = "any"
+
+[boss.timer.cancel_trigger]
+type = "any_of"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_1st_prime_directive"
+
+[[boss.timer.cancel_trigger.conditions]]
+type = "timer_expires"
+timer_id = "propagator_core_xr53_prime_directive"
+
+[[boss.challenges]]
+id = "propagator_core_xr53_ee_dtps"
+name = "Extraneous Expulsion"
+metric = "damage_taken"
+color = [255, 128, 0, 255]
+columns = "total_only"
+difficulties = ["master"]
+
+[[boss.challenges.conditions]]
+type = "ability"
+ability_ids = [4825717879603200]

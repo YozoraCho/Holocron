@@ -1,0 +1,79 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Lost Island - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 4 bosses, 1 bonus boss
+
+[area]
+name = "Lost Island"
+area_id = 833571547775675
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Putrid Shaclaw
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "putrid_shaclaw"
+name = "Putrid Shaclaw"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Putrid Shaclaw"
+ids = [2838853123571712, 2898153737027584]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: LR-5 Sentinel Droid
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "lr_5_sentinel_droid"
+name = "LR-5 Sentinel Droid"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "LR-5 Sentinel Droid"
+ids = [2815832098865152, 2808620848775168]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Project Sav-Rak
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "project_sav_rak"
+name = "Project Sav-Rak"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Project Sav-Rak"
+ids = [2802144038092800, 2819585900281856]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 4: Doctor Lorrick
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "doctor_lorrick"
+name = "Doctor Lorrick"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Doctor Lorrick"
+ids = [2794163988856832, 2838582540632064, 2809320928444416, 2819959562436608]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bonus Boss: Transgenic Sample Eleven
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "transgenic_sample_eleven"
+name = "Transgenic Sample Eleven"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Transgenic Sample Eleven"
+ids = [2835799401824256, 2802509110312960]
+is_kill_target = true
+is_boss = true

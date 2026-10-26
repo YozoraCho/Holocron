@@ -1,0 +1,75 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Kuat Drive Yards - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3 bosses (Bosses 1–2 have Republic / Empire variants)
+
+[area]
+name = "Kuat Drive Yards"
+area_id = 137438993442
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1 (Republic): Lieutenant Krupp
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "lieutenant_krupp"
+name = "Lieutenant Krupp"
+difficulties = ["veteran"]
+
+[[boss.entities]]
+name = "Lieutenant Krupp"
+ids = [3316187198914560]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1 (Empire): Major Benes
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "major_benes"
+name = "Major Benes"
+difficulties = ["veteran"]
+
+[[boss.entities]]
+name = "Major Benes"
+ids = [3316170019045376]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2 (Republic): Lord Modo
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "lord_modo"
+name = "Lord Modo"
+difficulties = ["veteran"]
+
+[[boss.entities]]
+name = "Lord Modo"
+ids = [3316174314012672]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2 (Empire): Master Khoris
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "master_khoris"
+name = "Master Khoris"
+difficulties = ["veteran"]
+
+[[boss.entities]]
+name = "Master Khoris"
+ids = [3316200083816448]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Station Guardian One
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "station_guardian_one"
+name = "Station Guardian One"
+difficulties = ["veteran"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Station Guardian One"
+ids = [3316182903947264]
+is_boss = true

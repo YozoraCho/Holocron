@@ -1,0 +1,78 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# The Foundry - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 4 bosses, 1 bonus boss
+
+[area]
+name = "The Foundry"
+area_id = 833571547775681
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Foundry Guardian
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "foundry_guardian"
+name = "Foundry Guardian"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Foundry Guardian"
+ids = [747710856560640, 2514742006513664]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: HK-47
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "hk_47"
+name = "HK-47"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "HK-47"
+ids = [2514754891415552, 739833886539776]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: N4-10 Exterminator
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "n4_10_exterminator"
+name = "N4-10 Exterminator"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "N4-10 Exterminator"
+ids = [2514729121611776, 1169322026205184]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 4: Mysterious Jedi
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "mysterious_jedi"
+name = "Mysterious Jedi"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Mysterious Jedi"
+ids = [2514780661219328, 739846771441664]
+is_boss = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bonus Boss: Burrower Matriarch
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "burrower_matriarch"
+name = "Burrower Matriarch"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Burrower Matriarch"
+ids = [1148233736781824, 2514724826644480]
+is_kill_target = true
+is_boss = true

@@ -1,0 +1,16 @@
+[area]
+name = "Hive of the Mountain Queen"
+id = 945872057669593
+
+[[boss]]
+id = "mutated_geonosian_queen"
+name = "Mutated Geonosian Queen"
+difficulties = ["story", "veteran"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Mutated Geonosian Queen"
+ids = [4204768687816704, 4197299739688960, 4204772982784000, 4204764392849408]
+is_boss = true
+is_kill_target = true
+

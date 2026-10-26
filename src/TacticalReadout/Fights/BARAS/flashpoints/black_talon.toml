@@ -1,0 +1,80 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# The Black Talon - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3 bosses, 1 bonus boss
+
+[area]
+name = "The Black Talon"
+area_id = 833571547775679
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: GXR-5 Sabotage Droid
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "gxr_5_sabotage_droid"
+name = "GXR-5 Sabotage Droid"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "GXR-5 Sabotage Droid"
+ids = [2509699714908160, 430896888938496]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1a: Sergeant Boran
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "sergeant_boran"
+name = "Sergeant Boran"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Sergeant Boran"
+ids = [2509772729352192, 425970561449984]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Commander Ghulil
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "commander_ghulil"
+name = "Commander Ghulil"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Commander Ghulil"
+ids = [2509686830006272, 364857471795200]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Yadira Ban
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "yadira_ban"
+name = "Yadira Ban"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Yadira Ban"
+ids = [365755119960064, 2509777024319488]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bonus Boss: GXR-7 Command Droid
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "gxr_7_command_droid"
+name = "GXR-7 Command Droid"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "GXR-7 Command Droid"
+ids = [1426904099848192, 2509755549483008]
+is_kill_target = true
+is_boss = true

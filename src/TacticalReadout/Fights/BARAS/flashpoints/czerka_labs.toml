@@ -1,0 +1,52 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Czerka Corporate Labs - Flashpoint
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3 bosses
+
+[area]
+name = "Czerka Corporate Labs"
+area_id = 137438993332
+area_type = "flashpoint"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 1: Eradicator Droid
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "eradicator_droid"
+name = "Eradicator Droid"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Eradicator Droid"
+ids = [3247278743617536, 3245981663494144, 3279297724809216]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 2: Chief Zokar
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "zokar"
+name = "Chief Zokar"
+difficulties = ["story", "veteran", "master"]
+
+[[boss.entities]]
+name = "Chief Zokar"
+ids = [3245985958461440, 3279302019776512]
+is_boss = true
+is_kill_target = true
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Boss 3: Rasmus Blys
+# ═══════════════════════════════════════════════════════════════════════════════
+[[boss]]
+id = "rasmus"
+name = "Rasmus Blys"
+difficulties = ["story", "veteran", "master"]
+is_final_boss = true
+
+[[boss.entities]]
+name = "Rasmus Blys"
+ids = [3247210024140800, 3279306314743808]
+is_kill_target = true
+is_boss = true

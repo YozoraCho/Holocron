@@ -8,7 +8,7 @@ namespace Holocron.Tests;
 internal static class FakeFight
 {
     public const ulong AreaId = 833571547775000;
-    public const ulong VeteranId = 836045448953651;
+    public const ulong VeteranId = 836045448953652;
     public const ulong BossId = 4000000000000001;
     public const ulong SlamId = 5000000000000001;
     public const ulong ShockId = 5000000000000002;
@@ -25,7 +25,7 @@ internal static class FakeFight
     public static string Line(double seconds, string source, string target, string ability, string effect) =>
         $"[{Pull.AddSeconds(seconds).ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture)}] {source} {target} {ability} [{effect}]";
 
-    public static string Area(double t, string difficulty = "8 Player Veteran {836045448953651}") =>
+    public static string Area(double t, string difficulty = "8 Player Veteran {836045448953652}") =>
         Line(t, Me, "[]", "[]", $"AreaEntered {{836045448953664}}: Test Operation {{{AreaId}}} {difficulty}") + " (he3000) <v7.0.0b>";
 
     public static string EnterCombat(double t) => Line(t, Me, "[]", "[]", "Event {836045448945472}: EnterCombat {836045448945489}");
@@ -181,7 +181,7 @@ public class ReadoutEngineTests
     [Fact]
     public void WrongDifficulty_OrArea_LoadsNothing()
     {
-        Feed(FakeFight.Area(-30, "8 Player Story {836045448953650}"), FakeFight.EnterCombat(0), FakeFight.Hit(1));
+        Feed(FakeFight.Area(-30, "8 Player Story {836045448953651}"), FakeFight.EnterCombat(0), FakeFight.Hit(1));
         Assert.Empty(ViewAt(2).Ready);
         Assert.Null(ViewAt(2).Fight);
     }

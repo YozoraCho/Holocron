@@ -33,4 +33,19 @@ public class PluginOutputTests
         foreach (var shared in new[] { "Ashla.SDK.dll", "Ashla.UI.dll", "Hexa.NET.ImGui.dll", "HexaGen.Runtime.dll", "cimgui.dll" })
             Assert.Empty(Directory.GetFiles(folder, shared, SearchOption.AllDirectories));
     }
+
+    [Fact]
+    public void TacticalReadout_ShipsBarasData_WithItsLicense()
+    {
+        var folder = Output("TacticalReadout");
+        using var manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(folder, "manifest.json")));
+        var files = manifest.RootElement.GetProperty("Files").EnumerateObject().Select(f => f.Name).ToList();
+
+        Assert.Equal(54, files.Count(f => f.StartsWith("Fights/BARAS/", StringComparison.Ordinal) && f.EndsWith(".toml", StringComparison.Ordinal)));
+        Assert.Contains("Fights/BARAS/LICENSE", files);
+        Assert.Contains("Tomlyn.dll", files);
+        var notices = File.ReadAllText(Path.Combine(folder, "THIRD-PARTY-NOTICES.txt"));
+        Assert.Contains("The BARAS Authors", notices);
+        Assert.Contains("Alexandre Mutel", notices);
+    }
 }

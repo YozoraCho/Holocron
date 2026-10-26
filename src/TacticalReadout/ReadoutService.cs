@@ -18,15 +18,20 @@ public sealed class ReadoutSettings
     public int MaxBars { get; set; } = 6;
 
     public bool ShowWhenIdle { get; set; } = true;
+
+    public bool UseBaras { get; set; } = true;
 }
 
 internal sealed record LoadedFight(FightFile Fight, bool BuiltIn);
+
+internal sealed record LoadedBaras(BarasArea Area, bool BuiltIn, string Name);
 
 internal sealed class ReadoutService : IDisposable
 {
     public static readonly int[] LookaheadChoices = [15, 30, 45, 60, 90];
 
     private readonly object _gate = new();
+    private readonly object _loadGate = new();
     private readonly ReadoutEngine _engine = new();
     private readonly ISpeaker _speaker;
     private readonly IPluginConfig _config;
@@ -38,6 +43,8 @@ internal sealed class ReadoutService : IDisposable
     private bool _haveEvent;
     private IReadOnlyList<LoadedFight> _loaded = [];
     private IReadOnlyList<FightProblem> _problems = [];
+    private IReadOnlyList<LoadedBaras> _baras = [];
+    private readonly Dictionary<string, (DateTime Written, long Length, BarasArea Area)> _barasCache = new(StringComparer.OrdinalIgnoreCase);
     private int _frame = -1;
     private ReadoutView? _frameView;
 
@@ -53,6 +60,7 @@ internal sealed class ReadoutService : IDisposable
             ? Path.Combine(Path.GetDirectoryName(settingsFile)!, "TacticalReadout", "Fights")
             : null;
         Settings = Sanitize(config.Load<ReadoutSettings>());
+        _engine.UseBaras = Settings.UseBaras;
     }
 
     public ReadoutSettings Settings { get; }
@@ -71,6 +79,22 @@ internal sealed class ReadoutService : IDisposable
     public IReadOnlyList<FightProblem> Problems
     {
         get { lock (_gate) return _problems; }
+    }
+
+    public IReadOnlyList<LoadedBaras> Baras
+    {
+        get { lock (_gate) return _baras; }
+    }
+
+    public void SetUseBaras(bool use)
+    {
+        lock (_gate)
+        {
+            Settings.UseBaras = use;
+            _engine.UseBaras = use;
+            _frameView = null;
+        }
+        SaveSettings();
     }
 
     private static ReadoutSettings Sanitize(ReadoutSettings settings)
@@ -110,11 +134,15 @@ internal sealed class ReadoutService : IDisposable
             }
         }
         loaded.AddRange(byName.Values.OrderBy(f => f.Fight.Name, StringComparer.OrdinalIgnoreCase));
+        List<LoadedBaras> baras;
+        lock (_loadGate) baras = LoadBaras(problems);
         lock (_gate)
         {
             _loaded = loaded;
             _problems = problems;
+            _baras = baras;
             _engine.SetFights([.. loaded.Select(f => f.Fight)]);
+            _engine.SetBaras([.. baras.Select(b => b.Area)]);
         }
         foreach (var problem in problems) _log.Warn($"[Tactical Readout] {problem}");
         if (announce)
@@ -122,8 +150,49 @@ internal sealed class ReadoutService : IDisposable
             if (problems.Count > 0)
                 _toasts.Show("Tactical Readout", $"{problems.Count} fight file(s) have problems. Settings > Fights lists them.", ToastKind.Warning);
             else
-                _toasts.Show("Tactical Readout", $"Loaded {loaded.Count} fight(s).", ToastKind.Success);
+                _toasts.Show("Tactical Readout", $"Loaded {loaded.Count} fight(s) and {baras.Sum(b => b.Area.Bosses.Count)} BARAS boss(es).", ToastKind.Success);
         }
+    }
+
+    private List<LoadedBaras> LoadBaras(List<FightProblem> problems)
+    {
+        var byName = new Dictionary<string, LoadedBaras>(StringComparer.OrdinalIgnoreCase);
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var (folder, builtIn) in new[] { (BuiltInFolder, true), (UserFolder, false) })
+        {
+            if (folder is null || !Directory.Exists(folder)) continue;
+            foreach (var path in Directory.EnumerateFiles(folder, "*.toml", SearchOption.AllDirectories).Order(StringComparer.OrdinalIgnoreCase))
+            {
+                string name = Path.GetRelativePath(folder, path).Replace('\\', '/');
+                seen.Add(path);
+                try
+                {
+                    var info = new FileInfo(path);
+                    BarasArea area;
+                    if (_barasCache.TryGetValue(path, out var cached) && cached.Written == info.LastWriteTimeUtc && cached.Length == info.Length)
+                    {
+                        area = cached.Area;
+                    }
+                    else
+                    {
+                        area = BarasLoader.Parse(path, File.ReadAllText(path));
+                        _barasCache[path] = (info.LastWriteTimeUtc, info.Length, area);
+                    }
+                    byName[name] = new LoadedBaras(area, builtIn, name);
+                }
+                catch (BarasFormatException error)
+                {
+                    _barasCache.Remove(path);
+                    problems.Add(new FightProblem(path, 0, error.Message));
+                }
+                catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+                {
+                    problems.Add(new FightProblem(path, 0, $"Couldn't read it: {error.Message}"));
+                }
+            }
+        }
+        foreach (var stale in _barasCache.Keys.Where(k => !seen.Contains(k)).ToList()) _barasCache.Remove(stale);
+        return [.. byName.Values.OrderBy(b => b.Name, StringComparer.OrdinalIgnoreCase)];
     }
 
     public void Handle(CombatEvent e)

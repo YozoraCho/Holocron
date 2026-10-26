@@ -1,3 +1,4 @@
+using System.Numerics;
 using Ashla.SDK;
 
 namespace TacticalReadout;
@@ -10,14 +11,15 @@ internal sealed record FiredAlert(
     string? Speech,
     bool Silent,
     DateTime At,
-    double Duration)
+    double Duration,
+    Vector4? Color = null)
 {
     public string? Spoken => Silent ? null : Speech ?? Text;
 }
 
-internal sealed record TimelineBar(string Text, double Remaining, double Duration)
+internal sealed record TimelineBar(string Text, double Remaining, double Duration, Vector4? Color = null, bool Depletes = false)
 {
-    public bool Active => Remaining <= 0;
+    public bool Active => !Depletes && Remaining <= 0;
 }
 
 internal sealed record ReadoutView(
@@ -29,7 +31,10 @@ internal sealed record ReadoutView(
     double Position,
     IReadOnlyList<TimelineBar> Bars,
     IReadOnlyList<FiredAlert> Alerts,
-    string? LastResult);
+    string? LastResult,
+    BarasStatus? Boss = null,
+    string? BarasArea = null,
+    int BarasBosses = 0);
 
 internal sealed class ReadoutEngine
 {
@@ -50,10 +55,22 @@ internal sealed class ReadoutEngine
     private long _nextAlert;
     private string? _lastResult;
     private DateTime _lastResultAt;
+    private readonly BarasEngine _baras;
+
+    public ReadoutEngine()
+    {
+        _baras = new BarasEngine(() => ++_nextAlert);
+    }
+
+    public bool UseBaras { get; set; } = true;
+
+    internal BarasEngine Baras => _baras;
 
     public IReadOnlyList<FightFile> Fights => _fights;
 
     public bool InEncounter => _encounter is not null;
+
+    public void SetBaras(IReadOnlyList<BarasArea> areas) => _baras.SetAreas(areas);
 
     public void SetFights(IReadOnlyList<FightFile> fights)
     {
@@ -71,6 +88,12 @@ internal sealed class ReadoutEngine
         var fired = new List<FiredAlert>();
         Advance(e.Timestamp, fired);
         Process(e, fired);
+        if (_owner is not null && UseBaras && e.Effect.Type.Id != CombatIds.AreaEntered)
+        {
+            var baras = new List<FiredAlert>();
+            _baras.Handle(e, _owner, baras);
+            Keep(baras, fired);
+        }
         return fired;
     }
 
@@ -78,7 +101,22 @@ internal sealed class ReadoutEngine
     {
         var fired = new List<FiredAlert>();
         Advance(now, fired);
+        if (UseBaras)
+        {
+            var baras = new List<FiredAlert>();
+            _baras.Tick(now, baras);
+            Keep(baras, fired);
+        }
         return fired;
+    }
+
+    private void Keep(List<FiredAlert> baras, List<FiredAlert> fired)
+    {
+        foreach (var alert in baras)
+        {
+            _alerts.Add(alert);
+            fired.Add(alert);
+        }
     }
 
     public FiredAlert Test(AlertLevel level, DateTime now)
@@ -110,9 +148,29 @@ internal sealed class ReadoutEngine
                 if (bars.Count >= maxBars) break;
             }
         }
-        var alerts = _alerts.Where(a => a.At <= now && now < a.At.AddSeconds(a.Duration)).OrderByDescending(a => a.Level).ThenByDescending(a => a.Id).ToList();
-        string? result = _lastResult is not null && (now - _lastResultAt).TotalSeconds < ResultSeconds ? _lastResult : null;
-        return new ReadoutView(now, _area?.Name, _difficulty?.Name, _active, _encounter?.Fight, position, bars, alerts, result);
+        BarasStatus? boss = null;
+        var shown = _alerts.Where(a => a.At <= now && now < a.At.AddSeconds(a.Duration));
+        if (UseBaras)
+        {
+            var baras = _baras.View(now);
+            if (_encounter is null && baras.Status is { } status)
+            {
+                boss = status;
+                position = (now - status.Start).TotalSeconds;
+                bars.AddRange(baras.Bars.Take(maxBars));
+            }
+            shown = shown.Concat(baras.Countdowns);
+        }
+        var alerts = shown.OrderByDescending(a => a.Level).ThenByDescending(a => a.Id).ToList();
+        string? result = null;
+        DateTime resultAt = default;
+        if (_lastResult is not null) (result, resultAt) = (_lastResult, _lastResultAt);
+        if (UseBaras && _baras.LastResult is { } barasResult && (result is null || _baras.LastResultAt > resultAt))
+            (result, resultAt) = (barasResult, _baras.LastResultAt);
+        if (result is not null && (now - resultAt).TotalSeconds >= ResultSeconds) result = null;
+        var readyBosses = UseBaras ? _baras.Ready.Count : 0;
+        return new ReadoutView(now, _area?.Name, _difficulty?.Name, _active, _encounter?.Fight, position, bars, alerts, result,
+            boss, readyBosses > 0 ? _baras.AreaName : null, readyBosses);
     }
 
     private bool Applies(FightFile fight) =>
@@ -132,6 +190,7 @@ internal sealed class ReadoutEngine
             End(e.Timestamp, null);
             _area = e.Effect.Effect;
             _difficulty = e.Effect.Detail;
+            _baras.EnterArea(e.Effect.Effect, e.Effect.Detail, e.Timestamp);
             _active = [.. _fights.Where(Applies)];
             _inCombat = false;
             _combatStart = null;

@@ -3,9 +3,9 @@
     <AshlaPluginName>Tactical Readout</AshlaPluginName>
     <AshlaPluginTags>timers;triggers;alerts;raids</AshlaPluginTags>
     <EnableDynamicLoading>true</EnableDynamicLoading>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Ashla contributors</Authors>
-    <Description>Boss timelines and alerts from combat-log events, with optional text-to-speech.</Description>
+    <Description>Boss timers, phases and alerts from combat-log events, with BARAS boss data built in and optional text-to-speech.</Description>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Holocron.Tests" />
@@ -14,9 +14,10 @@
     <PackageReference Include="Ashla.SDK" />
     <PackageReference Include="Ashla.UI" />
     <PackageReference Include="System.Speech" />
+    <PackageReference Include="Tomlyn" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Fights/*.txt" CopyToOutputDirectory="PreserveNewest" LinkBase="Fights" />
+    <None Include="Fights/**/*.txt;Fights/**/*.toml;Fights/**/LICENSE;Fights/**/README.md" CopyToOutputDirectory="PreserveNewest" />
     <None Include="THIRD-PARTY-NOTICES.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

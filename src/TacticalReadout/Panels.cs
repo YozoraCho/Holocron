@@ -14,6 +14,24 @@ internal static class ReadoutColors
         AlertLevel.Alert => AshlaColors.Warning,
         _ => AshlaColors.Text
     };
+
+    public static float Luminance(Vector4 c) => 0.2126f * c.X + 0.7152f * c.Y + 0.0722f * c.Z;
+
+    public static Vector4 ForBar(Vector4 color)
+    {
+        float l = Luminance(color);
+        if (l <= 0.5f) return color with { W = 1f };
+        float k = 0.5f / l;
+        return new Vector4(color.X * k, color.Y * k, color.Z * k, 1f);
+    }
+
+    public static Vector4 ForText(Vector4 color)
+    {
+        float l = Luminance(color);
+        if (l >= 0.55f) return color with { W = 1f };
+        float t = (0.55f - l) / (1f - l);
+        return new Vector4(color.X + (1f - color.X) * t, color.Y + (1f - color.Y) * t, color.Z + (1f - color.Z) * t, 1f);
+    }
 }
 
 internal sealed class TimelinePanel(ReadoutService service, Action openSettings) : IPluginPanel, IPluginPanelAppearance
@@ -35,9 +53,10 @@ internal sealed class TimelinePanel(ReadoutService service, Action openSettings)
         var view = service.Frame(ImGui.GetFrameCount());
         float width = MathF.Round(ImGui.GetFontSize() * 17f);
 
-        if (view.Fight is { } fight)
+        string? title = view.Fight?.Name ?? (view.Boss is { } boss ? boss.Phase is { Length: > 0 } phase ? $"{boss.Boss} · {phase}" : boss.Boss : null);
+        if (title is not null)
         {
-            ImGui.TextColored(AshlaColors.Text, AshlaDraw.Ellipsize(fight.Name, width - ImGui.CalcTextSize("00:00").X - 12f));
+            ImGui.TextColored(AshlaColors.Text, AshlaDraw.Ellipsize(title, width - ImGui.CalcTextSize("00:00").X - 12f));
             ImGui.SameLine(width - ImGui.CalcTextSize(Clock(view.Position)).X + ImGui.GetStyle().WindowPadding.X);
             ImGui.TextColored(AshlaColors.TextMuted, Clock(view.Position));
         }
@@ -45,9 +64,9 @@ internal sealed class TimelinePanel(ReadoutService service, Action openSettings)
         {
             ImGui.TextColored(AshlaColors.Healing, AshlaDraw.Ellipsize(result, width));
         }
-        else if (view.Ready.Count > 0)
+        else if (ReadyText(view) is { } ready)
         {
-            ImGui.TextColored(AshlaColors.TextMuted, AshlaDraw.Ellipsize("Ready: " + string.Join(", ", view.Ready.Select(f => f.Name)), width));
+            ImGui.TextColored(AshlaColors.TextMuted, AshlaDraw.Ellipsize("Ready: " + ready, width));
         }
         else if (service.Settings.ShowWhenIdle)
         {
@@ -64,8 +83,10 @@ internal sealed class TimelinePanel(ReadoutService service, Action openSettings)
             {
                 foreach (var bar in view.Bars)
                 {
-                    float fraction = bar.Active ? 1f : 1f - (float)(bar.Remaining / service.Settings.Lookahead);
-                    var color = bar.Active ? AshlaColors.Healing : bar.Remaining <= 5 ? AshlaColors.Warning : AshlaColors.Accent;
+                    float fraction = bar.Depletes
+                        ? (float)Math.Clamp(bar.Remaining / Math.Max(bar.Duration, 0.001), 0, 1)
+                        : bar.Active ? 1f : 1f - (float)(bar.Remaining / service.Settings.Lookahead);
+                    var color = bar.Color is { } own ? ReadoutColors.ForBar(own) : (bar.Active ? AshlaColors.Healing : bar.Remaining <= 5 ? AshlaColors.Warning : AshlaColors.Accent);
                     AshlaDraw.MeterBar(bar.Text, Remaining(bar), fraction, color, barHeight);
                 }
             }
@@ -78,6 +99,13 @@ internal sealed class TimelinePanel(ReadoutService service, Action openSettings)
             if (ImGui.MenuItem("Reload fights")) service.Reload(announce: true);
             ImGui.EndPopup();
         }
+    }
+
+    internal static string? ReadyText(ReadoutView view)
+    {
+        var parts = view.Ready.Select(f => f.Name).ToList();
+        if (view.BarasArea is { } area) parts.Add($"{area} ({view.BarasBosses} boss{(view.BarasBosses == 1 ? "" : "es")})");
+        return parts.Count == 0 ? null : string.Join(", ", parts);
     }
 
     internal static string Clock(double seconds)
@@ -117,7 +145,7 @@ internal sealed class AlertPanel(ReadoutService service) : IPluginPanel, IPlugin
         var view = service.Frame(ImGui.GetFrameCount());
         float width = ImGui.GetContentRegionAvail().X;
         var drawList = ImGui.GetWindowDrawList();
-        if (view.Alerts.Count == 0)
+        if (!view.Alerts.Any(a => a.Text is { Length: > 0 }))
         {
             if (ShowArea || ImGui.IsWindowHovered())
             {
@@ -134,13 +162,12 @@ internal sealed class AlertPanel(ReadoutService service) : IPluginPanel, IPlugin
 
         bool large = AshlaFonts.HasLarge;
         if (large) ImGui.PushFont(AshlaFonts.Large, AshlaFonts.LargeSize);
-        foreach (var alert in view.Alerts.Take(MaxShown))
+        foreach (var alert in view.Alerts.Where(a => a.Text is { Length: > 0 }).Take(MaxShown))
         {
-            var text = alert.Text ?? alert.Speech ?? "";
-            if (text.Length == 0) continue;
+            if (alert.Text is not { Length: > 0 } text) continue;
             double left = alert.At.AddSeconds(alert.Duration).Subtract(view.Now).TotalSeconds;
             float alpha = (float)Math.Clamp(left / 0.4, 0, 1);
-            var color = ReadoutColors.For(alert.Level).WithAlpha(alpha);
+            var color = (alert.Color is { } own ? ReadoutColors.ForText(own) : ReadoutColors.For(alert.Level)).WithAlpha(alpha);
             var textSize = ImGui.CalcTextSize(text);
             var cursor = ImGui.GetCursorScreenPos();
             var position = new Vector2(cursor.X + MathF.Max(0f, (width - textSize.X) * 0.5f), cursor.Y);
@@ -197,12 +224,36 @@ internal sealed class SettingsPanel(ReadoutService service, AlertPanel alerts, I
         ImGui.TextUnformatted(area);
         ImGui.TextColored(AshlaColors.TextMuted, "Ready here:");
         ImGui.SameLine();
-        ImGui.TextUnformatted(view.Ready.Count == 0 ? "No fights" : string.Join(", ", view.Ready.Select(f => f.Name)));
+        ImGui.TextUnformatted(TimelinePanel.ReadyText(view) ?? "No fights");
         ImGui.Spacing();
+
+        var baras = service.Baras;
+        ImGui.SeparatorText($"BARAS Boss Timers ({baras.Sum(b => b.Area.Bosses.Count)} bosses)");
+        bool useBaras = service.Settings.UseBaras;
+        if (ImGui.Checkbox("Use BARAS boss timers", ref useBaras)) service.SetUseBaras(useBaras);
+        ImGui.PushTextWrapPos(0f);
+        AshlaDraw.MutedText($"Timers, phases and alerts for {baras.Count} operations and flashpoints from BARAS (MIT license). " +
+                            "When one of your fight files has the boss, its timeline is shown instead.");
+        ImGui.PopTextWrapPos();
+        if (baras.Count > 0 && ImGui.TreeNode("Areas"))
+        {
+            foreach (var entry in baras)
+            {
+                ImGui.TextUnformatted(entry.Area.Name);
+                ImGui.SameLine();
+                AshlaDraw.MutedText($"{(entry.BuiltIn ? "built-in" : "yours")}  ·  {entry.Area.Bosses.Count} bosses, {entry.Area.TimerCount} timers");
+            }
+            ImGui.TreePop();
+        }
 
         var loaded = service.Loaded;
         ImGui.SeparatorText($"Fight Files ({loaded.Count})");
-        if (loaded.Count == 0) AshlaDraw.MutedText("No fight files yet. Make one from a saved fight, or add .txt files to your fights folder.");
+        if (loaded.Count == 0)
+        {
+            ImGui.PushTextWrapPos(0f);
+            AshlaDraw.MutedText("No fight files yet. Make one from a saved fight, or add .txt files to your fights folder.");
+            ImGui.PopTextWrapPos();
+        }
         foreach (var fight in loaded)
         {
             ImGui.TextUnformatted(fight.Fight.Name);
@@ -228,7 +279,8 @@ internal sealed class SettingsPanel(ReadoutService service, AlertPanel alerts, I
             if (ImGui.Button("Open my fights folder")) ReadoutService.Open(folder, folder: true);
         }
         ImGui.PushTextWrapPos(0f);
-        AshlaDraw.MutedText("Fight files are .txt files in your fights folder. One with the same name as a built-in file replaces it.");
+        AshlaDraw.MutedText("Fight files are .txt files in your fights folder, and BARAS encounter files are .toml files. " +
+                            "One with the same name and folder as a built-in file replaces it.");
         ImGui.PopTextWrapPos();
     }
 

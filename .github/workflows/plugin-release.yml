@@ -1,0 +1,66 @@
+name: Plugin release
+
+on:
+  push:
+    tags: ['*-v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Read the tag
+        id: tag
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF_NAME -notmatch '^(?<plugin>[A-Za-z0-9][A-Za-z0-9._]*)-v(?<version>[0-9].*)$') {
+            throw "Tag $env:GITHUB_REF_NAME should look like CombatMeter-v0.1.0"
+          }
+          $plugin = $Matches.plugin
+          if (-not (Test-Path "src/$plugin/$plugin.csproj")) { throw "There's no plugin project at src/$plugin" }
+          $version = (dotnet msbuild "src/$plugin/$plugin.csproj" -getProperty:Version).Trim()
+          if ($version -ne $Matches.version) {
+            throw "Tag $env:GITHUB_REF_NAME doesn't match <Version>$version</Version> in src/$plugin/$plugin.csproj"
+          }
+          "plugin=$plugin" >> $env:GITHUB_OUTPUT
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Test
+        run: dotnet test Holocron.slnx -c Release
+
+      - name: Build the plugin zip
+        shell: pwsh
+        run: ./scripts/package-plugin.ps1 -Plugin ${{ steps.tag.outputs.plugin }}
+
+      - name: Create the release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PLUGIN: ${{ steps.tag.outputs.plugin }}
+          VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          $zip = Get-Item "artifacts/$env:PLUGIN-$env:VERSION.zip"
+          gh release create $env:GITHUB_REF_NAME $zip.FullName --title "$env:PLUGIN $env:VERSION" --generate-notes
+          $url = "https://github.com/$env:GITHUB_REPOSITORY/releases/download/$env:GITHUB_REF_NAME/$($zip.Name)"
+          $hash = (Get-FileHash $zip.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          @(
+            "## $env:PLUGIN $env:VERSION",
+            "",
+            "Zip: $url",
+            "",
+            "SHA-256: ``$hash``",
+            "",
+            "To list it, run this on a new branch and open a pull request with the two changed files:",
+            "",
+            "``````",
+            "python tools/holocron.py add $url --license AGPL-3.0-only --changes `"What's new.`"",
+            "``````"
+          ) -join "`n" >> $env:GITHUB_STEP_SUMMARY

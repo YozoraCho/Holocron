@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Ashla.SDK" />
+    <PackageReference Include="Ashla.CombatLog" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/CombatMeter/CombatMeter.csproj" />
+    <ProjectReference Include="../../src/TacticalReadout/TacticalReadout.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="combat-logs/*.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <AssemblyMetadata Include="HolocronRoot" Value="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../../'))" />
+    <AssemblyMetadata Include="HolocronConfiguration" Value="$(Configuration)" />
+  </ItemGroup>
+</Project>

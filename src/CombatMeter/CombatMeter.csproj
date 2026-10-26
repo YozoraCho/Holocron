@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AshlaPluginName>Combat Meter</AshlaPluginName>
+    <AshlaPluginTags>combat;parser;meter</AshlaPluginTags>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Version>0.1.0</Version>
+    <Authors>Ashla contributors</Authors>
+    <Description>Damage, healing, damage taken and threat per encounter for you and your companion, from parsed combat-log events.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Holocron.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Ashla.SDK" />
+    <PackageReference Include="Ashla.UI" />
+  </ItemGroup>
+</Project>

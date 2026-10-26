@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/CombatMeter/CombatMeter.csproj" />
+  <Project Path="src/TacticalReadout/TacticalReadout.csproj" />
+  <Project Path="tests/Holocron.Tests/Holocron.Tests.csproj" />
+</Solution>

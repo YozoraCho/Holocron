@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <AshlaSdkVersion>1.0.0</AshlaSdkVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Ashla.SDK" Version="$(AshlaSdkVersion)" />
+    <PackageVersion Include="Ashla.UI" Version="$(AshlaSdkVersion)" />
+    <PackageVersion Include="Ashla.CombatLog" Version="$(AshlaSdkVersion)" />
+    <PackageVersion Include="System.Speech" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+  </ItemGroup>
+</Project>

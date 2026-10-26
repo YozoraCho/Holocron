@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/YozoraCho/Holocron/main/schema/repo.schema.json",
+  "title": "Ashla plugin repository",
+  "description": "The repo.json Ashla reads from Holocron and from any repository a player adds.",
+  "type": "object",
+  "required": ["Format", "Plugins"],
+  "properties": {
+    "Format": {
+      "description": "Format version. Ashla refuses a format newer than it knows.",
+      "const": 1
+    },
+    "Name": {
+      "description": "The repository's name.",
+      "type": "string"
+    },
+    "Plugins": {
+      "type": "array",
+      "items": { "$ref": "plugin.schema.json" }
+    }
+  }
+}

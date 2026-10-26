@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AshlaPluginName>Tactical Readout</AshlaPluginName>
+    <AshlaPluginTags>timers;triggers;alerts;raids</AshlaPluginTags>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Version>0.1.0</Version>
+    <Authors>Ashla contributors</Authors>
+    <Description>Boss timelines and alerts from combat-log events, with optional text-to-speech.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Holocron.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Ashla.SDK" />
+    <PackageReference Include="Ashla.UI" />
+    <PackageReference Include="System.Speech" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fights/*.txt" CopyToOutputDirectory="PreserveNewest" LinkBase="Fights" />
+    <None Include="THIRD-PARTY-NOTICES.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

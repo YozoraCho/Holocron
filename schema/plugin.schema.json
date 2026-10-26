@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/YozoraCho/Holocron/main/schema/plugin.schema.json",
+  "title": "Holocron plugin entry",
+  "description": "One plugin in Holocron: plugins/<Id>.json, and each item of Plugins in repo.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Id", "Version", "ApiLevel", "License", "Source", "Download", "Sha256", "Files"],
+  "properties": {
+    "Id": {
+      "description": "The plugin's id, the same as Id in its manifest.json and the name of its folder and main DLL.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+    },
+    "Name": {
+      "description": "Display name, from the manifest.",
+      "type": "string"
+    },
+    "Author": {
+      "description": "From the manifest.",
+      "type": "string"
+    },
+    "Description": {
+      "description": "From the manifest.",
+      "type": "string"
+    },
+    "Version": {
+      "description": "The version in the zip's manifest.json, like 1.2.0.",
+      "type": "string",
+      "pattern": "^[vV]?[0-9]+(\\.[0-9]+){0,3}([-+ ].*)?$"
+    },
+    "ApiLevel": {
+      "description": "The Ashla plugin API level the plugin was built for, from the manifest.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "Tags": {
+      "description": "From the manifest.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "License": {
+      "description": "SPDX id of the plugin's license. It must be compatible with the AGPL-3.0.",
+      "enum": [
+        "AGPL-3.0-only", "AGPL-3.0-or-later", "GPL-3.0-only", "GPL-3.0-or-later", "LGPL-3.0-only",
+        "LGPL-3.0-or-later", "Apache-2.0", "MPL-2.0", "MIT", "BSD-2-Clause", "BSD-3-Clause", "ISC", "Zlib", "0BSD",
+        "Unlicense"
+      ]
+    },
+    "Source": {
+      "description": "https address of the plugin's source code.",
+      "type": "string",
+      "pattern": "^https://"
+    },
+    "Download": {
+      "description": "https address of the release zip.",
+      "type": "string",
+      "pattern": "^https://"
+    },
+    "Sha256": {
+      "description": "SHA-256 of the release zip, lowercase hex.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "Files": {
+      "description": "The Files map from the zip's manifest.json: each file's path and SHA-256.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "pattern": "^[0-9a-fA-F]{64}$" }
+    },
+    "Changes": {
+      "description": "One line about what's new in this version, shown next to the update in Ashla.",
+      "type": "string",
+      "maxLength": 300
+    }
+  }
+}

@@ -14,7 +14,7 @@ The official plugins are developed here, in `src/`:
 | Plugin | What it does |
 |---|---|
 | [Combat Meter](src/CombatMeter) | An ACT-style parser: damage, healing, damage taken and threat per encounter, with ability breakdowns and saved fights. |
-| [Tactical Readout](src/TacticalReadout) | Boss timers, phases and alerts for 19 operations, 34 flashpoints and a lair boss from [BARAS](https://github.com/baras-app/baras)'s boss data, plus Cactbot-style fight files of your own, with optional text-to-speech. Guide: [docs/tactical-readout.md](docs/tactical-readout.md). |
+| [Tactical Readout](src/TacticalReadout) | Boss timers, phases and alerts for 17 operations from [BARAS](https://github.com/baras-app/baras)'s boss data (flashpoint bosses are recognized, without timers yet), plus Cactbot-style fight files of your own, with optional text-to-speech. Guide: [docs/tactical-readout.md](docs/tactical-readout.md). |
 
 They build against the `Ashla.SDK` and `Ashla.UI` NuGet packages (versions in `Directory.Packages.props`), with
 the .NET 10 SDK:

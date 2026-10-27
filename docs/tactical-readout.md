@@ -3,8 +3,9 @@
 Tactical Readout (`src/TacticalReadout`) shows boss timers and alerts over SWTOR. It works two ways:
 
 - **BARAS boss timers, built in.** Tactical Readout reads the boss encounter files of
-  [BARAS](https://github.com/baras-app/baras) directly: timers, phases, counters and alerts for 19 operations,
-  34 flashpoints and a lair boss, ready the moment you zone in. See [BARAS boss timers](#baras-boss-timers).
+  [BARAS](https://github.com/baras-app/baras) directly: timers, phases, counters and alerts for 17 operations,
+  ready the moment you zone in. BARAS also lists the bosses of 34 flashpoints and a lair boss, without timers, so
+  there Tactical Readout recognizes the boss and times the fight. See [BARAS boss timers](#baras-boss-timers).
 - **Fight files of your own**, in the spirit of [Cactbot](https://github.com/OverlayPlugin/cactbot)'s raidboss
   module for FFXIV: a timeline that stays in step with the boss, and triggers. See [Making a fight](#making-a-fight).
 
@@ -26,8 +27,9 @@ are also spoken in the Windows voice; an alarm cuts off anything still being spo
 ## BARAS boss timers
 
 The files in `src/TacticalReadout/Fights/BARAS` are BARAS's `core/definitions/encounters`, copied unchanged (the
-commit is in that folder's `README.md`) and shipped with the plugin under BARAS's MIT license. Tactical Readout
-runs them the way BARAS does:
+commit is in that folder's `README.md`) and shipped with the plugin under BARAS's MIT license. About 1,000 timers
+cover 17 operations; the flashpoint files and the Orbital Core list only their bosses. Tactical Readout runs them
+the way BARAS does:
 
 - **The boss** is picked when you're in combat in that area and one of the boss's NPCs shows up in the log (or the
   boss's `encounter_trigger` happens). The area and difficulty come from the area line in the log, so timers marked

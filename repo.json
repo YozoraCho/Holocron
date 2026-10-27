@@ -30,7 +30,7 @@
       "Name": "Tactical Readout",
       "Author": "Ashla contributors",
       "Description": "Boss timers, phases and alerts from combat-log events, with BARAS boss data built in and optional text-to-speech.",
-      "Version": "0.2.0",
+      "Version": "0.2.1",
       "ApiLevel": 1,
       "Tags": [
         "timers",
@@ -40,8 +40,8 @@
       ],
       "License": "AGPL-3.0-only",
       "Source": "https://github.com/YozoraCho/Holocron",
-      "Download": "https://github.com/YozoraCho/Holocron/releases/download/TacticalReadout-v0.2.0/TacticalReadout-0.2.0.zip",
-      "Sha256": "c4b6ef85086c76a28423d29f7c29378c0371d52b46736d5a081dfc47b89362a7",
+      "Download": "https://github.com/YozoraCho/Holocron/releases/download/TacticalReadout-v0.2.1/TacticalReadout-0.2.1.zip",
+      "Sha256": "149936cf15ce9adcafb66ba1464819e740f2323a02608f64dfcf25cf6bcd17cf",
       "Files": {
         "Fights/BARAS/flashpoints/a_traitor_among_the_chiss.toml": "67d70545d1949df14844cdac7272f53f3fe17bf4ae25bcb99b77895bf9f6f7d8",
         "Fights/BARAS/flashpoints/assault_on_tython.toml": "635c7324144c190a7052a8111307146070c51f51e7424ec9ff61de18f2d521c6",
@@ -101,13 +101,13 @@
         "Fights/BARAS/README.md": "8a4a8a4a46d4a586b6e9fddce00a257be52a19aacf874e9e2996a3c8337834ea",
         "runtimes/win/lib/net10.0/System.Speech.dll": "75861292d8d9f7354c6bb379615a5090e1957f53a5f9ae3c775e46ebd256957f",
         "System.Speech.dll": "3a085da963e10fe149bc6dce8eb4abfe5d1bc5221df4e1a5c9b40c3daddd76bf",
-        "TacticalReadout.deps.json": "11586e17900d6e06a6dc8cdb09651e7e3595a5dd7aaaf784b3686e22c1e13d72",
-        "TacticalReadout.dll": "e69ff694a17a6be1af7ae06bcc9e0d69dc7a6e8654ecf66f2ade1e894bb38ca1",
+        "TacticalReadout.deps.json": "d536dd283116a2d6e18e507c4a3ec41c219e371b444339f979aaa54eb5a99012",
+        "TacticalReadout.dll": "0ad8295c5cc3395ef8aaa9467453d353dd50743c487034ced2fb1bf9d9309da3",
         "TacticalReadout.runtimeconfig.json": "2e1693f8326910b07be4292d78dceba9cb49952c500afab1860d09b4d5e54047",
         "THIRD-PARTY-NOTICES.txt": "4c5a6cdf6afe351faabf392191380c604c733884b19423aa39dea31a52cc457c",
         "Tomlyn.dll": "2366b14ae842bf9d4eadf206c8b20c7c2217ff75b5f4567999c5c7a9caae6dea"
       },
-      "Changes": "First release. Boss timers, phases and alerts for 54 operations and flashpoints from BARAS, plus your own fight files and optional text-to-speech."
+      "Changes": "Clicks now pass through the alert area; tick Move the alert area in Settings to place it."
     }
   ]
 }

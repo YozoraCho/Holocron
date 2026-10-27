@@ -3,7 +3,7 @@
     <AshlaPluginName>Tactical Readout</AshlaPluginName>
     <AshlaPluginTags>timers;triggers;alerts;raids</AshlaPluginTags>
     <EnableDynamicLoading>true</EnableDynamicLoading>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>Ashla contributors</Authors>
     <Description>Boss timers, phases and alerts from combat-log events, with BARAS boss data built in and optional text-to-speech.</Description>
   </PropertyGroup>

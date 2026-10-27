@@ -129,6 +129,8 @@ public class BarasLoaderTests
 
         Assert.Equal(54, files.Count);
         Assert.Equal("19 operations, 34 flashpoints and 1 other area", BarasArea.Describe(areas));
+        Assert.Equal("17 operations", BarasArea.Describe(areas.Where(a => a.TimerCount > 0)));
+        Assert.All(areas.Where(a => a.Type == "flashpoint"), a => Assert.Equal(0, a.TimerCount));
         Assert.All(areas, a => Assert.False(string.IsNullOrWhiteSpace(a.Name)));
         Assert.True(areas.Sum(a => a.Bosses.Count) >= 200);
         Assert.True(areas.Sum(a => a.TimerCount) >= 900);
@@ -236,6 +238,9 @@ public class BarasEngineTests
     {
         Feed(FakeFight.Area(-30), FakeFight.EnterCombat(1));
         Assert.Equal(("Test Operation", 1), (ViewAt(1.5).BarasArea, ViewAt(1.5).BarasBosses));
+        Assert.Equal("Test Operation (1 boss)", TimelinePanel.ReadyText(ViewAt(1.5)));
+        Assert.Equal("Mandalorian Raiders (5 bosses, no timers)",
+            TimelinePanel.ReadyText(ViewAt(1.5) with { BarasArea = "Mandalorian Raiders", BarasBosses = 5, BarasTimers = 0 }));
         Assert.Null(ViewAt(1.5).Boss);
 
         Feed(FakeBaras.Hit(2, 5000000));
@@ -445,6 +450,12 @@ public class BarasServiceTests : IDisposable
             service.Handle(FakeFight.Parse(line));
         Assert.Equal("Test Boss", service.Frame(1).Boss?.Boss);
         Assert.Equal(["Shock on Tester"], voice.Said);
+
+        var alerts = new AlertPanel(service);
+        Assert.True(alerts.Appearance.ClickThrough);
+        alerts.ShowArea = true;
+        Assert.False(alerts.Appearance.ClickThrough);
+        Assert.Equal((560f, 160f), (alerts.Appearance.DefaultWidth, alerts.Appearance.DefaultHeight));
 
         service.SetUseBaras(false);
         Assert.Null(service.Frame(2).Boss);

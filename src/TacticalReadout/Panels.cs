@@ -104,7 +104,8 @@ internal sealed class TimelinePanel(ReadoutService service, Action openSettings)
     internal static string? ReadyText(ReadoutView view)
     {
         var parts = view.Ready.Select(f => f.Name).ToList();
-        if (view.BarasArea is { } area) parts.Add($"{area} ({view.BarasBosses} boss{(view.BarasBosses == 1 ? "" : "es")})");
+        if (view.BarasArea is { } area)
+            parts.Add($"{area} ({view.BarasBosses} boss{(view.BarasBosses == 1 ? "" : "es")}{(view.BarasTimers == 0 ? ", no timers" : "")})");
         return parts.Count == 0 ? null : string.Join(", ", parts);
     }
 
@@ -128,9 +129,7 @@ internal sealed class AlertPanel(ReadoutService service) : IPluginPanel, IPlugin
     public string Id => "readout.alerts";
     public string Title => "Tactical Readout Alerts";
 
-    public bool ShowArea { get; set; }
-
-    public PanelAppearance Appearance { get; } = new()
+    private static readonly PanelAppearance Placing = new()
     {
         ShowTitleBar = false,
         BackgroundOpacity = 0f,
@@ -140,14 +139,26 @@ internal sealed class AlertPanel(ReadoutService service) : IPluginPanel, IPlugin
         NoScrollbar = true
     };
 
+    private static readonly PanelAppearance Showing = Placing with { ClickThrough = true };
+
+    private int _settingsFrame = -100;
+
+    public bool ShowArea { get; set; }
+
+    public PanelAppearance Appearance => ShowArea ? Placing : Showing;
+
+    public void SettingsDrawn(int frame) => _settingsFrame = frame;
+
     public void Draw()
     {
-        var view = service.Frame(ImGui.GetFrameCount());
+        int frame = ImGui.GetFrameCount();
+        if (ShowArea && frame - _settingsFrame > 2) ShowArea = false;
+        var view = service.Frame(frame);
         float width = ImGui.GetContentRegionAvail().X;
         var drawList = ImGui.GetWindowDrawList();
         if (!view.Alerts.Any(a => a.Text is { Length: > 0 }))
         {
-            if (ShowArea || ImGui.IsWindowHovered())
+            if (ShowArea)
             {
                 var min = ImGui.GetWindowPos();
                 var max = min + ImGui.GetWindowSize();
@@ -196,6 +207,7 @@ internal sealed class SettingsPanel(ReadoutService service, AlertPanel alerts, I
 
     public void Draw()
     {
+        alerts.SettingsDrawn(ImGui.GetFrameCount());
         var view = service.Frame(ImGui.GetFrameCount());
         AshlaDraw.Tabs("readout.tabs", TabLabels, ref _tab, AshlaColors.Accent);
         ImGui.Spacing();
@@ -232,7 +244,8 @@ internal sealed class SettingsPanel(ReadoutService service, AlertPanel alerts, I
         bool useBaras = service.Settings.UseBaras;
         if (ImGui.Checkbox("Use BARAS boss timers", ref useBaras)) service.SetUseBaras(useBaras);
         ImGui.PushTextWrapPos(0f);
-        AshlaDraw.MutedText($"Timers, phases and alerts for {BarasArea.Describe(baras.Select(b => b.Area))} from BARAS (MIT license). " +
+        AshlaDraw.MutedText($"Boss data for {BarasArea.Describe(baras.Select(b => b.Area))} from BARAS (MIT license), with timers " +
+                            $"and alerts for {BarasArea.Describe(baras.Select(b => b.Area).Where(a => a.TimerCount > 0))}. " +
                             "When one of your fight files has the boss, its timeline is shown instead.");
         ImGui.PopTextWrapPos();
         if (baras.Count > 0 && ImGui.TreeNode("Areas"))
@@ -326,9 +339,11 @@ internal sealed class SettingsPanel(ReadoutService service, AlertPanel alerts, I
         ImGui.SameLine();
         if (ImGui.Button("Alarm")) service.Test(AlertLevel.Alarm);
         bool area = alerts.ShowArea;
-        if (ImGui.Checkbox("Show where alerts appear", ref area)) alerts.ShowArea = area;
+        if (ImGui.Checkbox("Move the alert area", ref area)) alerts.ShowArea = area;
         ImGui.PushTextWrapPos(0f);
-        AshlaDraw.MutedText("Alarms are the most urgent and stop anything still being spoken. Drag the alert area to move it.");
+        AshlaDraw.MutedText("Alarms are the most urgent and stop anything still being spoken. While \"Move the alert area\" is on, the alert " +
+                            "area shows its outline: drag it, or drag a corner to resize it. The rest of the time, and once this window " +
+                            "closes, clicks go straight through it to the game.");
         ImGui.PopTextWrapPos();
     }
 

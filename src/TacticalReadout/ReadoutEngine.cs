@@ -34,7 +34,8 @@ internal sealed record ReadoutView(
     string? LastResult,
     BarasStatus? Boss = null,
     string? BarasArea = null,
-    int BarasBosses = 0);
+    int BarasBosses = 0,
+    int BarasTimers = 0);
 
 internal sealed class ReadoutEngine
 {
@@ -170,7 +171,7 @@ internal sealed class ReadoutEngine
         if (result is not null && (now - resultAt).TotalSeconds >= ResultSeconds) result = null;
         var readyBosses = UseBaras ? _baras.Ready.Count : 0;
         return new ReadoutView(now, _area?.Name, _difficulty?.Name, _active, _encounter?.Fight, position, bars, alerts, result,
-            boss, readyBosses > 0 ? _baras.AreaName : null, readyBosses);
+            boss, readyBosses > 0 ? _baras.AreaName : null, readyBosses, UseBaras ? _baras.Ready.Sum(b => b.Timers.Count) : 0);
     }
 
     private bool Applies(FightFile fight) =>
